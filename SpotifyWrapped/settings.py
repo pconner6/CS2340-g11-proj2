@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import environ
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,6 +28,10 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+SPOTIFY_CLIENT_ID = '7d35aa773e9c47d1b49c8ae4c9ecc4f4'
+SPOTIFY_CLIENT_SECRET = '60686f44c374413eb66a1088d9d93b13'
+SPOTIFY_REDIRECT_URI = 'http://127.0.0.1:8000/'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'app',
 ]
 
 MIDDLEWARE = [
