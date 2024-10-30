@@ -16,8 +16,6 @@ def spotify_login(request):
         "&scope=user-top-read"
     )
     return redirect(auth_url)
-
-# Spotify Callback (after user grants access)
 def spotify_callback(request):
     code = request.GET.get('code')
 
@@ -35,6 +33,10 @@ def spotify_callback(request):
     token_json = token_response.json()
 
     access_token = token_json.get('access_token')
+    if access_token:
+        request.session['spotify_token'] = access_token
+        # Here, optionally store the Spotify user ID or username if available
+        # request.session['spotify_user_id'] = <Spotify User ID from API>
 
     # Redirect or render a new page after the callback
     return render(request, 'app/callback.html', {'access_token': access_token})
