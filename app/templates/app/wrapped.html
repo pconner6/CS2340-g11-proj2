@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Past Spotify Wrapped</title>
+</head>
+<body>
+    <h1>Your Past Spotify Wrapped</h1>
+
+    {% if error %}
+        <p>Error: {{ error }}</p>
+    {% else %}
+        <h2>Top Tracks</h2>
+        <ul>
+            {% for track in top_tracks %}
+                <li>
+                    <strong>{{ track.name }}</strong> by
+                    {% for artist in track.artists %}
+                        {{ artist.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                    <br> Album: {{ track.album.name }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Top Artists</h2>
+        <ul>
+            {% for artist in top_artists %}
+                <li><strong>{{ artist.name }}</strong></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <a href="{% url 'home' %}">Back to Home</a>
+</body>
+</html>

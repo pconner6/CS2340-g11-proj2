@@ -35,8 +35,49 @@ def spotify_callback(request):
     access_token = token_json.get('access_token')
     if access_token:
         request.session['spotify_token'] = access_token
-        # Here, optionally store the Spotify user ID or username if available
+        # Optionally store additional user data
         # request.session['spotify_user_id'] = <Spotify User ID from API>
 
-    # Redirect or render a new page after the callback
-    return render(request, 'app/callback.html', {'access_token': access_token})
+        # Redirect to the home page after successful login
+        return redirect('home')  # Redirect to the home page
+
+    # Handle the case where access token is not received
+    return render(request, 'app/callback.html', {'error': 'Failed to retrieve access token.'})
+
+
+def home(request):
+    if 'spotify_token' not in request.session:
+        return redirect('spotify_login')
+
+    return render(request, 'app/home.html')
+
+
+def view_wrapped(request):
+    if 'spotify_token' not in request.session:
+        return redirect('spotify_login')  # Redirect to login if not authenticated
+
+    access_token = request.session['spotify_token']
+    headers = {
+        'Authorization': f'Bearer {access_token}'
+    }
+
+    # Fetch top tracks
+    top_tracks_url = 'https://api.spotify.com/v1/me/top/tracks?limit=10'
+    top_tracks_response = requests.get(top_tracks_url, headers=headers)
+
+    # Fetch top artists
+    top_artists_url = 'https://api.spotify.com/v1/me/top/artists?limit=10'
+    top_artists_response = requests.get(top_artists_url, headers=headers)
+
+    if top_tracks_response.status_code == 200 and top_artists_response.status_code == 200:
+        top_tracks = top_tracks_response.json().get('items', [])
+        top_artists = top_artists_response.json().get('items', [])
+
+        return render(request, 'app/wrapped.html', {
+            'top_tracks': top_tracks,
+            'top_artists': top_artists,
+        })
+    else:
+        return render(request, 'app/wrapped.html', {
+            'error': 'Failed to retrieve data from Spotify.',
+        })
