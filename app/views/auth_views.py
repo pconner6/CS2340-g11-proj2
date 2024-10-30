@@ -81,3 +81,8 @@ def view_wrapped(request):
         return render(request, 'app/wrapped.html', {
             'error': 'Failed to retrieve data from Spotify.',
         })
+def logout_view(request):
+    if 'spotify_token' in request.session:
+        del request.session['spotify_token']
+
+    return redirect('landing_page')
