@@ -20,5 +20,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('app.urls')),  # Delegate all root-level paths to app/urls.py
+    path('spotify/', include('app.urls')),  # Delegate all root-level paths to app/urls.py
 ]
