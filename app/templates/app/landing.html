@@ -1,15 +1,42 @@
 <!DOCTYPE html>
-<html> lang="en">
+<html lang="en">
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Home Page</title>
    {% load static %} <!-- Load the static template tag here -->
    <link rel="stylesheet" href="{% static 'app/homepage.css' %}"> <!-- Reference to your CSS file -->
+   <style>
+       body {
+           font-family: Arial, sans-serif;
+           background-color: #f9f9f9;
+           margin: 0;
+           padding: 20px;
+       }
+       /* Styling for the navigation link */
+       .contact-devs {
+           position: fixed; /* Fixed positioning to keep it in the corner */
+           top: 20px;       /* Distance from the top */
+           right: 20px;     /* Distance from the right */
+           background-color: transparent; /* No background */
+           color: #333;     /* Text color */
+           text-decoration: none; /* No underline */
+           font-size: 16px; /* Font size */
+           padding: 8px; /* Padding for spacing */
+       }
+       .contact-devs:hover {
+           text-decoration: underline; /* Underline on hover */
+       }
+   </style>
 </head>
 
 <body>
     <h1>Welcome to Spotify Wrapped</h1>
     <a href="{% url 'spotify_login' %}">Login with Spotify</a>
+
+    <!-- Contact Developers Link -->
+    <a href="{% url 'devs' %}" class="contact-devs">Contact Developers</a>
 </body>
 </html>
+
+
