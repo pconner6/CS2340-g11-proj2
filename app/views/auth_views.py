@@ -93,7 +93,7 @@ def devs(request):
         {
             'name': 'Elise Docena',
             'email': 'edocena3@gatech.edu',
-            'about' : 'Elise is a second year Computer Science major at Georgia Tech with interests in data science and software engineering'
+            'about' : 'Elise is a second year Computer Science major at Georgia Tech with interests in data science and software engineering.'
         },
         {
             'name': 'Cailee Jackson',
