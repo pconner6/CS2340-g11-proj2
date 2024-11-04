@@ -86,3 +86,35 @@ def logout_view(request):
         del request.session['spotify_token']
 
     return redirect('landing_page')
+
+
+def devs(request):
+    developers = [
+        {
+            'name': 'Elise Docena',
+            'email': 'edocena3@gatech.edu',
+            'about' : 'Elise is a second year Computer Science major at Georgia Tech with interests in data science and software engineering'
+        },
+        {
+            'name': 'Cailee Jackson',
+            'email': 'gt email here',
+            'about' : 'Cailee is _____'
+        },
+        {
+            'name': 'Sarah Kilgore',
+            'email': 'gt email here',
+            'about' : 'Sarah is _____'
+        },
+        {
+            'name': 'Paul Conner',
+            'email': 'gt email here',
+            'about' : 'Paul is _____'
+        },
+        {
+            'name': 'Faris Fakhouri',
+            'email': 'gt email here',
+            'about' : 'Faris is _____'
+        }
+    ]
+
+    return render(request, 'app/devs.html', {'developers': developers})

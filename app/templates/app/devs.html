@@ -1,0 +1,51 @@
+<!-- devs.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Meet Our Developers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .developers {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .developer {
+            margin: 20px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #fff;
+            width: 250px; /* Set a fixed width for the developer cards */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .developer h3 {
+            margin: 10px 0;
+        }
+        .developer p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Meet Our Developers</h1>
+    <div class="developers">
+        {% for developer in developers %}
+            <div class="developer">
+                <h3>{{ developer.name }}</h3>
+                <p>Email: <a href="mailto:{{ developer.email }}">{{ developer.email }}</a></p>
+                <p>About: {{ developer.about }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
+
+
