@@ -3,35 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Past Spotify Wrapped</title>
+    <title>Your Spotify Wrapped</title>
+
+    <style>
+        /* Centering container and general styling */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4; /* Light gray background */
+            color: #333; /* Darker text color */
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: #ffffff; /* White background */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: #444; /* Neutral darker gray */
+        }
+
+        select {
+            padding: 8px 12px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        select:hover {
+            background-color: #e2e2e2;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: left;
+        }
+
+        a {
+            color: #007acc; /* Blue accent for links */
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Your Past Spotify Wrapped</h1>
+    <div class="container">
+        <h1>Your Past Spotify Wrapped</h1>
 
-    {% if error %}
-        <p>Error: {{ error }}</p>
-    {% else %}
-        <h2>Top Tracks</h2>
-        <ul>
-            {% for track in top_tracks %}
-                <li>
-                    <strong>{{ track.name }}</strong> by
-                    {% for artist in track.artists %}
-                        {{ artist.name }}{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                    <br> Album: {{ track.album.name }}
-                </li>
-            {% endfor %}
-        </ul>
+        <!-- Dropdown Menu for Time Range Selection -->
+        <form method="get" id="timeRangeForm">
+            <label for="timeRange">Select Time Range:</label>
+            <select name="time_range" id="timeRange" onchange="document.getElementById('timeRangeForm').submit()">
+                <option value="short_term" {% if selected_time_range == 'short_term' %}selected{% endif %}>Short Term (Last 4 Weeks)</option>
+                <option value="medium_term" {% if selected_time_range == 'medium_term' %}selected{% endif %}>Medium Term (Last 6 Months)</option>
+                <option value="long_term" {% if selected_time_range == 'long_term' %}selected{% endif %}>Long Term (All Time)</option>
+            </select>
+        </form>
 
-        <h2>Top Artists</h2>
-        <ul>
-            {% for artist in top_artists %}
-                <li><strong>{{ artist.name }}</strong></li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+        {% if error %}
+            <p>Error: {{ error }}</p>
+        {% else %}
+            <h2>Top Tracks</h2>
+            <ul>
+                {% for track in top_tracks %}
+                    <li>
+                        <strong>{{ track.name }}</strong> by
+                        {% for artist in track.artists %}
+                            {{ artist.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                        <br> Album: {{ track.album.name }}
+                    </li>
+                {% endfor %}
+            </ul>
 
-    <a href="{% url 'home' %}">Back to Home</a>
+            <h2>Top Artists</h2>
+            <ul>
+                {% for artist in top_artists %}
+                    <li><strong>{{ artist.name }}</strong></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <a href="{% url 'home' %}">Back to Home</a>
+    </div>
 </body>
 </html>

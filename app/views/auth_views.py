@@ -53,7 +53,6 @@ def home(request):
 
     return render(request, 'app/home.html')
 
-
 def view_wrapped(request):
     if 'spotify_token' not in request.session:
         return redirect('spotify_login')  # Redirect to login if not authenticated
@@ -63,12 +62,14 @@ def view_wrapped(request):
         'Authorization': f'Bearer {access_token}'
     }
 
-    # Fetch top tracks
-    top_tracks_url = 'https://api.spotify.com/v1/me/top/tracks?limit=10'
+    # Get selected time range from request, default to 'short_term'
+    time_range = request.GET.get('time_range', 'short_term')
+
+    # Fetch top tracks and artists for the selected time range
+    top_tracks_url = f'https://api.spotify.com/v1/me/top/tracks?limit=10&time_range={time_range}'
     top_tracks_response = requests.get(top_tracks_url, headers=headers)
 
-    # Fetch top artists
-    top_artists_url = 'https://api.spotify.com/v1/me/top/artists?limit=10'
+    top_artists_url = f'https://api.spotify.com/v1/me/top/artists?limit=10&time_range={time_range}'
     top_artists_response = requests.get(top_artists_url, headers=headers)
 
     if top_tracks_response.status_code == 200 and top_artists_response.status_code == 200:
@@ -78,11 +79,17 @@ def view_wrapped(request):
         return render(request, 'app/wrapped.html', {
             'top_tracks': top_tracks,
             'top_artists': top_artists,
+            'selected_time_range': time_range
         })
     else:
         return render(request, 'app/wrapped.html', {
             'error': 'Failed to retrieve data from Spotify.',
+            'selected_time_range': time_range
         })
+
+
+
+
 def logout_view(request):
     if 'spotify_token' in request.session:
         del request.session['spotify_token']
