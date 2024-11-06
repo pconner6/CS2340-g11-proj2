@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Holiday Spotify Wrapped</title>
+</head>
+<body>
+    <h1>Your Holiday Spotify Wrapped</h1>
+
+    {% if error %}
+        <p>Error: {{ error }}</p>
+    {% else %}
+        <h2>Christmas Top Tracks</h2>
+        <ul>
+            {% for track in holiday_data.Christmas %}
+                <li>
+                    <strong>{{ track.name }}</strong> by
+                    {% for artist in track.artists %}
+                        {{ artist.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                    <br> Album: {{ track.album.name }}
+                </li>
+            {% empty %}
+                <li>No Christmas tracks found.</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Halloween Top Tracks</h2>
+        <ul>
+            {% for track in holiday_data.Halloween %}
+                <li>
+                    <strong>{{ track.name }}</strong> by
+                    {% for artist in track.artists %}
+                        {{ artist.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                    <br> Album: {{ track.album.name }}
+                </li>
+            {% empty %}
+                <li>No Halloween tracks found.</li>
+            {% endfor %}
+        </ul>
+
+        <h2>Top Artists</h2>
+        <ul>
+            {% for artist in top_artists %}
+                <li><strong>{{ artist.name }}</strong></li>
+            {% empty %}
+                <li>No top artists found.</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <a href="{% url 'home' %}">Back to Home</a>
+</body>
+</html>

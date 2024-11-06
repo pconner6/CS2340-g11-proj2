@@ -1,6 +1,8 @@
 import requests
 from django.shortcuts import render, redirect
 from django.conf import settings
+from django.utils import timezone
+from datetime import datetime
 
 # Landing Page
 def landing_page(request):
@@ -118,3 +120,45 @@ def devs(request):
     ]
 
     return render(request, 'app/devs.html', {'developers': developers})
+
+def holiday_wrapped(request):
+    if 'spotify_token' not in request.session:
+        return redirect('spotify_login')
+
+    access_token = request.session['spotify_token']
+    headers = {
+        'Authorization': f'Bearer {access_token}'
+    }
+
+    # long term top tracks
+    top_tracks_url = 'https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=10'
+    top_tracks_response = requests.get(top_tracks_url, headers=headers)
+
+    # top artists for long term
+    top_artists_url = 'https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=10'
+    top_artists_response = requests.get(top_artists_url, headers=headers)
+
+    if top_tracks_response.status_code == 200 and top_artists_response.status_code == 200:
+        top_tracks = top_tracks_response.json().get('items', [])
+        top_artists = top_artists_response.json().get('items', [])
+
+        holiday_data = {
+            'Christmas': [],
+            'Halloween': []
+        }
+
+        for track in top_tracks:
+            track_name = track['name'].lower()
+            if "christmas" in track_name or "holiday" in track_name:
+                holiday_data['Christmas'].append(track)
+            elif "halloween" in track_name or "spooky" in track_name:
+                holiday_data['Halloween'].append(track)
+
+        return render(request, 'app/holiday_wrapped.html', {
+            'holiday_data': holiday_data,
+            'top_artists': top_artists,
+        })
+    else:
+        return render(request, 'app/holiday_wrapped.html', {
+            'error': 'Failed to retrieve data from Spotify.',
+        })
