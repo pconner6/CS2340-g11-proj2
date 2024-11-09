@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="..\..\static\app\output.css" rel="stylesheet">
    <title>Home Page</title>
-   {% load static %} <!-- Load the static template tag here -->
-   <link rel="stylesheet" href="{% static 'app/homepage.css' %}"> <!-- Reference to your CSS file -->
 </head>
 
-<body>
-    <h1>Welcome to Spotify Wrapped</h1>
+<body class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+    <h1 class="content-center font-bold font-oswald text-9xl">Welcome to Spotify Wrapped</h1>
     <a href="{% url 'spotify_login' %}">Login with Spotify</a>
 </body>
 </html>
