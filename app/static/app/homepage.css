@@ -1,19 +1,29 @@
 /* styles.css */
 
-
 /* Import Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
-
 
 body {
    margin: 0;
    padding: 0;
    font-family: 'Poppins', sans-serif;
-   background-color: #a8d8ea; /* Soft sky-blue */
    color: #2c3e50; /* Dark blue-grey for text */
+   transition: background-color 0.3s, color 0.3s;
 }
 
+/* Light Mode Gradient */
+body.light-mode {
+    background: linear-gradient(135deg, #6a11cb, #2575fc); /* Blue to purple gradient */
+    color: #2c3e50; /* Dark blue-grey for text */
+}
 
+/* Dark Mode Gradient */
+body.dark-mode {
+    background: linear-gradient(135deg, #a9a9a9, #000000); /* Light gray to black gradient */
+    color: #ffffff;
+}
+
+/* Container Styles */
 .container {
    display: flex;
    flex-direction: column;
@@ -23,7 +33,7 @@ body {
    text-align: center;
 }
 
-
+/* Heading Styles */
 h1 {
    font-size: 2.5rem; /* Smaller font size */
    font-weight: 700;
@@ -32,33 +42,32 @@ h1 {
    font-style: italic; /* Italic font */
 }
 
-
-a {
-   text-decoration: none;
-   font-size: 1.2rem;
-   padding: 12px 24px;
-   background-color: #6c63ff; /* Soft purple */
-   color: #fff;
-   border-radius: 30px; /* Rounded button */
-   transition: background-color 0.3s ease, transform 0.2s ease;
-   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+/* Button Styles */
+.contact-devs, .dark-mode-toggle {
+    position: fixed;
+    right: 20px;
+    background-color: transparent;
+    font-size: 16px;
+    padding: 8px;
+    cursor: pointer;
+    transition: color 0.3s;
 }
 
-
-a:hover {
-   background-color: #574bdb; /* Slightly darker purple on hover */
-   transform: scale(1.05); /* Subtle zoom on hover */
+.contact-devs {
+    top: 20px;
+    color: #2c3e50;
 }
 
+.dark-mode-toggle {
+    top: 60px; /* Position below "Contact Developers" button */
+    color: #2c3e50;
+}
 
-@media (max-width: 768px) {
-   h1 {
-       font-size: 2rem; /* Adjust for smaller screens */
-   }
+.contact-devs:hover, .dark-mode-toggle:hover {
+    text-decoration: underline;
+}
 
-
-   a {
-       font-size: 1rem;
-       padding: 10px 20px;
-   }
+.dark-mode .contact-devs,
+.dark-mode .dark-mode-toggle {
+    color: #ffffff;
 }

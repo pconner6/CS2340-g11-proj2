@@ -1,42 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Home Page</title>
-   {% load static %} <!-- Load the static template tag here -->
-   <link rel="stylesheet" href="{% static 'app/homepage.css' %}"> <!-- Reference to your CSS file -->
-   <style>
-       body {
-           font-family: Arial, sans-serif;
-           background-color: #f9f9f9;
-           margin: 0;
-           padding: 20px;
-       }
-       /* Styling for the navigation link */
-       .contact-devs {
-           position: fixed; /* Fixed positioning to keep it in the corner */
-           top: 20px;       /* Distance from the top */
-           right: 20px;     /* Distance from the right */
-           background-color: transparent; /* No background */
-           color: #333;     /* Text color */
-           text-decoration: none; /* No underline */
-           font-size: 16px; /* Font size */
-           padding: 8px; /* Padding for spacing */
-       }
-       .contact-devs:hover {
-           text-decoration: underline; /* Underline on hover */
-       }
-   </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static/app/homepage.css' %}">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        /* Dark mode styles */
+        .dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        /* Styling for the "Contact Developers" and "Dark Mode" toggle buttons */
+        .contact-devs {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: transparent;
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px;
+        }
+        .dark-mode-toggle {
+            position: fixed;
+            top: 60px; /* Position it below the "Contact Developers" button */
+            right: 20px;
+            background-color: transparent;
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px;
+            cursor: pointer;
+        }
+        .contact-devs:hover, .dark-mode-toggle:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Welcome to Spotify Wrapped</h1>
+    <h1>Welcome to Your Landing Page</h1>
     <a href="{% url 'spotify_login' %}">Login with Spotify</a>
 
-    <!-- Contact Developers Link -->
+    <!-- Contact Developers Button -->
     <a href="{% url 'devs' %}" class="contact-devs">Contact Developers</a>
+
+    <!-- Dark Mode Toggle Button -->
+    <a href="#" id="mode-toggle" class="dark-mode-toggle">Dark Mode</a>
+
+    <script>
+        // Function to apply the current theme mode
+        function applyTheme(isDarkMode) {
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                toggleButton.textContent = 'Light Mode';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                toggleButton.textContent = 'Dark Mode';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Retrieve stored theme preference and apply it
+        const storedTheme = localStorage.getItem('theme');
+        const isDarkMode = storedTheme === 'dark';
+        const toggleButton = document.getElementById('mode-toggle');
+        applyTheme(isDarkMode);
+
+        // Add event listener for toggle button
+        toggleButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            const currentMode = document.body.classList.contains('dark-mode');
+            applyTheme(!currentMode);
+        });
+    </script>
 </body>
 </html>
+
 
 

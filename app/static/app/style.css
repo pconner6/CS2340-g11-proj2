@@ -1,0 +1,47 @@
+/* Base styles for the entire site */
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Light Mode Gradient */
+body.light-mode {
+    background: linear-gradient(135deg, #6a11cb, #2575fc); /* Blue to purple gradient */
+    color: #333;
+}
+
+/* Dark Mode Gradient */
+body.dark-mode {
+    background: linear-gradient(135deg, #a9a9a9, #000000); /* Light gray to black gradient */
+    color: #ffffff;
+}
+
+/* Button Styles */
+.contact-devs, .dark-mode-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: transparent;
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 8px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.dark-mode-toggle {
+    top: 60px; /* Position it below the "Contact Developers" button */
+}
+
+.contact-devs:hover, .dark-mode-toggle:hover {
+    text-decoration: underline;
+}
+
+.dark-mode .contact-devs,
+.dark-mode .dark-mode-toggle {
+    color: #fff;
+}

@@ -45,6 +45,60 @@
             </div>
         {% endfor %}
     </div>
+<!-- Dark/Light Mode Toggle Button -->
+<a href="#" id="mode-toggle" class="mode-toggle">Dark Mode</a>
+
+<script>
+    // Function to apply the current theme mode
+    function applyTheme(isDarkMode) {
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            toggleButton.textContent = 'Light Mode';
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.classList.remove('dark-mode');
+            toggleButton.textContent = 'Dark Mode';
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
+    // Retrieve stored theme preference and apply it
+    const storedTheme = localStorage.getItem('theme');
+    const isDarkMode = storedTheme === 'dark';
+    const toggleButton = document.getElementById('mode-toggle');
+    applyTheme(isDarkMode);
+
+    // Add event listener for toggle button
+    toggleButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const currentMode = document.body.classList.contains('dark-mode');
+        applyTheme(!currentMode);
+    });
+</script>
+
+<style>
+    /* Styling for the dark/light mode toggle button */
+    .mode-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: transparent;
+        color: #333;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 8px;
+        cursor: pointer;
+    }
+    .mode-toggle:hover {
+        text-decoration: underline;
+    }
+    /* Dark mode styles */
+    .dark-mode {
+        background-color: #121212;
+        color: #ffffff;
+    }
+</style>
+
 </body>
 </html>
 
