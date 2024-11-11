@@ -1,1 +1,4 @@
 SpotifyWrapped/credentials.py
+/secrets.toml
+myenv
+__pycache__/
