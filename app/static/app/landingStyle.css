@@ -43,17 +43,6 @@ a {
    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
 }
 
-ul {
-    padding: 0;
-    margin-top: 1rem;
-}
-
-li {
-    margin-bottom: 1rem;
-    padding: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
 
 a:hover {
    background-color: #574bdb; /* Slightly darker purple on hover */

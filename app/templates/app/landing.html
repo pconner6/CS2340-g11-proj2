@@ -3,88 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landing Page</title>
+    <title>Spotify Wrapped</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'app/homepage.css' %}"> <!-- Reference to your CSS file -->
+    <link rel="stylesheet" href="{% static 'app/homepage.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
     <style>
+        /* Basic body styling */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             background-color: #f9f9f9;
             color: #333;
             margin: 0;
-            padding: 20px;
+            padding-top: 70px; /* Offset for fixed header */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
             transition: background-color 0.3s, color 0.3s;
         }
-        /* Dark mode styles */
+
+        /* Dark mode background */
         .dark-mode {
             background-color: #121212;
             color: #ffffff;
         }
-        /* Styling for the "Contact Developers" and "Dark Mode" toggle buttons */
-        .contact-devs {
+
+        /* Header styling */
+        .header {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: transparent;
-            color: #333;
-            text-decoration: none;
-            font-size: 16px;
-            padding: 8px;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 100;
         }
-        .dark-mode-toggle {
-            position: fixed;
-            top: 60px; /* Position it below the "Contact Developers" button */
-            right: 20px;
-            background-color: transparent;
-            color: #333;
+
+        /* Contact Us link */
+        .header a {
+            padding: 10px 15px;
+            background-color: #333;
+            color: #ffffff;
+            border-radius: 6px;
             text-decoration: none;
-            font-size: 16px;
-            padding: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-right: 20px;
+        }
+
+        .header a:hover {
+            background-color: #555;
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown button */
+        .dropdown button {
+            padding: 10px 15px;
+            background-color: #333;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
-        .contact-devs:hover, .dark-mode-toggle:hover {
-            text-decoration: underline;
+
+        .dropdown button:hover {
+            background-color: #555;
+        }
+
+        /* Dropdown content */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #ffffff;
+            min-width: 150px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Show dropdown on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Dropdown links */
+        .dropdown-content a {
+            display: block;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #eee;
+        }
+
+        /* Dark mode adjustments */
+        .dark-mode .header {
+            background-color: rgba(18, 18, 18, 0.9);
+        }
+
+        .dark-mode .header a,
+        .dark-mode .dropdown button {
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .dark-mode .header a:hover,
+        .dark-mode .dropdown button:hover {
+            background-color: #ddd;
+        }
+
+        .dark-mode .dropdown-content {
+            background-color: #333;
+        }
+
+        .dark-mode .dropdown-content a {
+            color: #ffffff;
+        }
+
+        .dark-mode .dropdown-content a:hover {
+            background-color: #555;
+        }
+
+        /* Title and button styling */
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 30px;
+            animation: fadeIn 2s ease-in-out forwards;
+            opacity: 0;
+        }
+
+        .spotify-login {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #1DB954;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .spotify-login:hover {
+            transform: scale(1.05);
+        }
+
+        /* Keyframe animations */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 
 <body>
-    <h1>Welcome to Your Landing Page</h1>
-    <a href="{% url 'spotify_login' %}">Login with Spotify</a>
+    <!-- Header with Contact Us and Personalization dropdown menu -->
+    <header class="header">
+        <a href="{% url 'devs' %}" class="contact-us">Contact Us</a>
+        <div class="dropdown">
+            <button>Personalization</button>
+            <div class="dropdown-content">
+                <a href="#" id="mode-toggle" class="dark-mode-toggle">Dark Mode</a>
+            </div>
+        </div>
+    </header>
 
-    <!-- Contact Developers Button -->
-    <a href="{% url 'devs' %}" class="contact-devs">Contact Developers</a>
+    <!-- Animated Title -->
+    <h1 class="title">Welcome to Your Spotify Wrapped</h1>
 
-    <!-- Dark Mode Toggle Button -->
-    <a href="#" id="mode-toggle" class="dark-mode-toggle">Dark Mode</a>
+    <!-- Spotify Login Button -->
+    <a href="{% url 'spotify_login' %}" class="spotify-login">Login with Spotify</a>
 
     <script>
-        // Function to apply the current theme mode
-        function applyTheme(isDarkMode) {
-            if (isDarkMode) {
-                document.body.classList.add('dark-mode');
-                toggleButton.textContent = 'Light Mode';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.body.classList.remove('dark-mode');
-                toggleButton.textContent = 'Dark Mode';
-                localStorage.setItem('theme', 'light');
-            }
-        }
-
-        // Retrieve stored theme preference and apply it
-        const storedTheme = localStorage.getItem('theme');
-        const isDarkMode = storedTheme === 'dark';
+        // Dark mode toggle functionality
         const toggleButton = document.getElementById('mode-toggle');
-        applyTheme(isDarkMode);
 
-        // Add event listener for toggle button
+        // Apply or remove dark mode on hover
+        toggleButton.addEventListener('mouseenter', () => {
+            document.body.classList.add('dark-mode');
+        });
+
+        toggleButton.addEventListener('mouseleave', () => {
+            // Check if the user has already selected dark mode permanently
+            const isDarkMode = localStorage.getItem('theme') === 'dark';
+            if (!isDarkMode) {
+                document.body.classList.remove('dark-mode');
+            }
+        });
+
+        // Toggle dark mode permanently on click
         toggleButton.addEventListener('click', (e) => {
             e.preventDefault();
-            const currentMode = document.body.classList.contains('dark-mode');
-            applyTheme(!currentMode);
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            toggleButton.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
         });
+
+        // Apply stored theme preference on load
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            toggleButton.textContent = 'Light Mode';
+        }
     </script>
 </body>
 </html>
