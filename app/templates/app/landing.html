@@ -15,7 +15,7 @@
             font-family: 'Arial', sans-serif;
             color: #333;
             margin: 0;
-            padding-top: 70px; /* Offset for fixed header */
+            padding-top: 70px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -104,36 +104,32 @@
             position: fixed;
             bottom: 0;
             width: 100%;
-            height: 300px; /* Adjust based on image size */
+            height: 200px;
             overflow: hidden;
         }
 
         .carousel {
             display: flex;
-            width: 400%; /* 4 images at once, adjust this as necessary */
-            height: 100%;
-            animation: slide 40s linear infinite; /* Slower transition */
+            animation: slide 12s linear infinite;
+            width: calc(100% * 8); /* 4 images x 2 for seamless loop */
         }
 
         .carousel img {
-            width: 25%; /* Each image takes up 25% of the width */
+            width: 100%;
             height: 100%;
-            object-fit: cover; /* Ensures image maintains aspect ratio */
-        }
-
-        /* Keyframe animations for smooth sliding */
-        @keyframes slide {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-25%); }
-            50% { transform: translateX(-50%); }
-            75% { transform: translateX(-75%); }
-            100% { transform: translateX(0); }
+            object-fit: cover;
         }
 
         /* Keyframe animations for fade-in effect */
         @keyframes fadeIn {
             0% { opacity: 0; transform: translateY(-10px); }
             100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Keyframe animation for smooth looping carousel */
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
     </style>
 </head>
@@ -159,6 +155,21 @@
 
     <!-- Spotify Login Button -->
     <a href="{% url 'spotify_login' %}" class="spotify-login">Login with Spotify</a>
+
+    <!-- Infinite Loop Carousel -->
+    <div class="carousel-wrapper">
+        <div class="carousel">
+            <img src="{% static 'app/images/img1.jpeg' %}" alt="Image 1">
+            <img src="{% static 'app/images/image2.png' %}" alt="Image 2">
+            <img src="{% static 'app/images/image3.png' %}" alt="Image 3">
+            <img src="{% static 'app/images/image4.png' %}" alt="Image 4">
+            <!-- Duplicate images for seamless loop -->
+            <img src="{% static 'app/images/img1.jpeg' %}" alt="Image 1">
+            <img src="{% static 'app/images/image2.png' %}" alt="Image 2">
+            <img src="{% static 'app/images/image3.png' %}" alt="Image 3">
+            <img src="{% static 'app/images/image4.png' %}" alt="Image 4">
+        </div>
+    </div>
 
     <script>
         const toggleButton = document.getElementById('mode-toggle');
@@ -192,20 +203,7 @@
         }
     </script>
 
-    <!-- Infinite Autoplay Carousel at the bottom of the page -->
-    <div class="carousel-wrapper">
-        <div class="carousel">
-            <!-- Duplicate images for seamless looping -->
-            <img src="{% static 'app/images/img1.jpeg' %}" alt="Image 1">
-            <img src="{% static 'app/images/image2.png' %}" alt="Image 2">
-            <img src="{% static 'app/images/image3.png' %}" alt="Image 3">
-            <img src="{% static 'app/images/image4.png' %}" alt="Image 4">
-            <!-- Duplicate the images -->
-            <img src="{% static 'app/images/img1.jpeg' %}" alt="Image 1">
-            <img src="{% static 'app/images/image2.png' %}" alt="Image 2">
-            <img src="{% static 'app/images/image3.png' %}" alt="Image 3">
-            <img src="{% static 'app/images/image4.png' %}" alt="Image 4">
-        </div>
-    </div>
 </body>
 </html>
+
+
