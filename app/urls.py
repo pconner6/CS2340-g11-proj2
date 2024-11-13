@@ -1,6 +1,7 @@
 
 from django.urls import path
 from .views import auth_views
+from .views import presentation_views
 
 urlpatterns = [
     path('', auth_views.landing_page, name='landing_page'),
@@ -11,4 +12,5 @@ urlpatterns = [
     path('logout/', auth_views.logout_view, name='logout'),
     path('devs/', auth_views.devs, name='devs'),
     path('holiday-wrapped/', auth_views.holiday_wrapped, name='holiday_wrapped'),
+    path('presentation/', presentation_views.presentation, name='presentation')
 ]

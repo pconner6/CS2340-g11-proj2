@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content=
+    "width=device-width, initial-scale=1.0">
+    <link href="..\..\static\app\output.css" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src=
+"https://cdn.tailwindcss.com">
+    </script>
+    <style type="text/tailwindcss">
+        /* Common Styles */
+        @layer components {
+            .slide{
+                @apply w-full h-full relative
+            }
+            .image{
+                @apply w-full h-full object-cover 
+            }
+            .arrow {
+                @apply md:text-xl sm:text-base text-xs 
+                font-bold absolute top-1/2 translate-y-[-50%] 
+                scale-[2] rounded-full bg-transparent 
+            }
+            .prev{
+                @apply left-5 sm:px-2 px-1.5 py-0.5 
+            }
+            .next{
+                @apply right-5 sm:px-2 px-1.5 py-0.5 
+            }
+        }
+    </style>
+    <title>
+        Presentation
+    </title>
+</head>
+
+<body class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 font-serif text-white flex 
+    flex-col items-center">
+
+    <p class="md:text-4xl font-sans text-black 
+        sm:text-2xl text-[15px] mt-5">
+        Presentation
+    </p>
+
+    <main class="md:w-[700px] w-[80vw] md:h-full
+        h-[40vw] overflow-y-hidden mt-10 ">
+        <div id="slide1" class="slide">
+            <div class="bg-white"><h2 class="text-center text-black">slide1</h2></div>
+            <a href="#slide3" class="prev arrow">
+                &lt;
+            </a>
+            <a href="#slide2" class="next arrow">
+                &gt;
+            </a>
+        </div>
+        <div id="slide2" class="slide">
+            <div class="bg-pink-400"><h2 class="text-center text-black">slide2</h2></div>
+            <a href="#slide1" class="prev arrow">
+                &lt;
+            </a>
+            <a href="#slide3" class="next arrow">
+                &gt;
+            </a>
+        </div>
+        <div id="slide3" class="slide">
+            <div class="bg-blue-400"><h2 class="text-center text-black">slide3</h2></div>
+            <a href="#slide2" class="prev arrow">
+                &lt;
+            </a>
+            <a href="#slide1" class="next arrow">
+                &gt;
+            </a>
+        </div>
+    </main>
+</body>
+
+</html>
