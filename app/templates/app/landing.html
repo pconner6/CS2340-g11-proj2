@@ -15,96 +15,27 @@
             font-family: 'Arial', sans-serif;
             color: #333;
             margin: 0;
-            padding-top: 70px; /* Offset for fixed header */
+            padding-top: 70px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             min-height: 100vh;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        /* Light mode background */
-        .light-mode-background {
-            position: fixed;
-            inset: 0;
-            z-index: -10;
-            width: 100vw;
-            height: 100vh;
-            background-color: #ffffff;
-            background-image: linear-gradient(to right, #f0f0f0 1px, transparent 1px),
-                              linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
-            background-size: 6rem 4rem;
-        }
-
-        /* Dark mode background */
-        .dark-mode-background {
-            position: fixed;
-            inset: 0;
-            z-index: -10;
-            width: 100vw;
-            height: 100vh;
-            background-color: #1a1a1a;
-            background-image: radial-gradient(25% 25% at 10% 10%, #ffffff 0%, #ffffff 40%, #1a1a1a 100%);
-        }
-
-        /* Header styling */
-        .header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 15px 20px;
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 100;
-        }
-
-        .header a,
-        .dropdown button {
-            padding: 10px 15px;
-            background-color: #333;
-            color: #ffffff;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            margin-right: 20px;
-        }
-
-        /* Title and button styling */
-        .title {
-            font-size: 3rem;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 30px;
-            animation: fadeIn 2s ease-in-out forwards;
-            opacity: 0;
-        }
-
-        .spotify-login {
-            display: inline-block;
-            padding: 12px 24px;
-            background-color: #1DB954;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: bold;
-            transition: transform 0.3s ease;
-        }
-
-        .spotify-login:hover {
-            transform: scale(1.05);
         }
 
         /* Carousel styling */
+        .carousel-wrapper {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+
         .carousel {
             display: flex;
-            width: 400%;
-            height: 100;
-            transition: transform 1s ease-in-out;
+            animation: slide 12s linear infinite;
+            width: calc(100% * 8); /* 4 images x 2 for seamless loop */
         }
 
         .carousel img {
@@ -113,18 +44,10 @@
             object-fit: cover;
         }
 
-        .carousel-wrapper {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 200px; /* Adjust based on the image size */
-            overflow: hidden;
-        }
-
-        /* Keyframe animations for fade-in effect */
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(-10px); }
-            100% { opacity: 1; transform: translateY(0); }
+        /* Keyframe animation for smooth looping */
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
     </style>
 </head>
@@ -150,6 +73,21 @@
 
     <!-- Spotify Login Button -->
     <a href="{% url 'spotify_login' %}" class="spotify-login">Login with Spotify</a>
+
+    <!-- Infinite Loop Carousel -->
+    <div class="carousel-wrapper">
+        <div class="carousel">
+            <img src="{% static 'app/images/img1.jpeg' %}" alt="Image 1">
+            <img src="{% static 'app/images/image2.png' %}" alt="Image 2">
+            <img src="{% static 'app/images/image3.png' %}" alt="Image 3">
+            <img src="{% static 'app/images/image4.png' %}" alt="Image 4">
+            <!-- Duplicate images for seamless loop -->
+            <img src="{% static 'app/images/img1.jpeg' %}" alt="Image 1">
+            <img src="{% static 'app/images/image2.png' %}" alt="Image 2">
+            <img src="{% static 'app/images/image3.png' %}" alt="Image 3">
+            <img src="{% static 'app/images/image4.png' %}" alt="Image 4">
+        </div>
+    </div>
 
     <script>
         const toggleButton = document.getElementById('mode-toggle');
@@ -183,32 +121,7 @@
         }
     </script>
 
-    <!-- Infinite Autoplay Carousel at the bottom of the page -->
-    <div class="carousel-wrapper">
-        <div class="carousel">
-            <img src="{% static 'app/images/img1.jpeg' %}" alt="Image 1">
-            <img src="{% static 'app/images/image2.png' %}" alt="Image 2">
-            <img src="{% static 'app/images/image3.png' %}" alt="Image 3">
-            <img src="{% static 'app/images/image4.png' %}" alt="Image 4">
-        </div>
-    </div>
-
-    <script>
-        let currentIndex = 0;
-        const slides = document.querySelectorAll('.carousel img');
-        const carousel = document.querySelector('.carousel');
-        const totalSlides = slides.length;
-
-        // Function to move carousel to next slide
-        function moveToNextSlide() {
-            currentIndex = (currentIndex + 1) % totalSlides; // Loop back to first slide after last one
-            const offset = -100 * currentIndex; // Calculate offset
-            carousel.style.transform = `translateX(${offset}%)`; // Apply the translation to the track
-        }
-
-        // Start the autoplay
-        setInterval(moveToNextSlide, 3000); // Change slide every 3 seconds
-    </script>
-
 </body>
 </html>
+
+
