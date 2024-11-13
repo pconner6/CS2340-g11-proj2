@@ -9,4 +9,6 @@ urlpatterns = [
     path('home/', auth_views.home, name='home'),
     path('wrapped/', auth_views.view_wrapped, name='view_wrapped'),
     path('logout/', auth_views.logout_view, name='logout'),
+    path('devs/', auth_views.devs, name='devs'),
+    path('holiday-wrapped/', auth_views.holiday_wrapped, name='holiday_wrapped'),
 ]

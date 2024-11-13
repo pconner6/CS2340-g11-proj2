@@ -1,14 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="..\..\static\app\output.css" rel="stylesheet">
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Home Page</title>
+   <link href="..\..\static\app\output.css" rel="stylesheet">
+   <style>
+       body {
+           font-family: Arial, sans-serif;
+           background-color: #f9f9f9;
+           margin: 0;
+           padding: 20px;
+       }
+       /* Styling for the navigation link */
+       .contact-devs {
+           position: fixed; /* Fixed positioning to keep it in the corner */
+           top: 20px;       /* Distance from the top */
+           right: 20px;     /* Distance from the right */
+           background-color: transparent; /* No background */
+           color: #333;     /* Text color */
+           text-decoration: none; /* No underline */
+           font-size: 16px; /* Font size */
+           padding: 8px; /* Padding for spacing */
+       }
+       .contact-devs:hover {
+           text-decoration: underline; /* Underline on hover */
+       }
+   </style>
 </head>
 
-<body class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+<!-- <body class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
     <h1 class="content-center font-bold font-oswald text-9xl">Welcome to Spotify Wrapped</h1>
-    <a href="{% url 'spotify_login' %}">Login with Spotify</a>
+    <a href="{% url 'spotify_login' %}">Login with Spotify</a> -->
+
+    <!-- Contact Developers Link -->
+    <!-- <a href="{% url 'devs' %}" class="contact-devs">Contact Developers</a>
+</body> -->
+<body class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
+  <div class="bg-white rounded-lg py-11 border-2 border-black">
+    <h1 class="text-center font-oswald text-9xl">Welcome to Spotify Wrapped</h1>
+    <br>
+    <br>
+    <a href="{% url 'spotify_login' %}" class="items-center btn border-black border-2 hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">Login with Spotify</a>
+    <!-- Contact Developers Link -->
+    <a href="{% url 'devs' %}" class="btn border-black border-2 hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">Contact Developers</a> 
+  </div>
 </body>
 </html>
+
+
