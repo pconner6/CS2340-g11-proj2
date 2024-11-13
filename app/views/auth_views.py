@@ -106,8 +106,8 @@ def devs(request):
         },
         {
             'name': 'Cailee Jackson',
-            'email': 'gt email here',
-            'about' : 'Cailee is _____'
+            'email': 'cjacks@gatech.edu',
+            'about' : 'Cailee is a third year Business major with a concentration in IT Management at Georgia Tech with interests in data analytics and project management.'
         },
         {
             'name': 'Sarah Kilgore',

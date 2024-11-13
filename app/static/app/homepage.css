@@ -11,17 +11,91 @@ body {
    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Light Mode Gradient */
-body.light-mode {
-    background: linear-gradient(135deg, #6a11cb, #2575fc); /* Blue to purple gradient */
-    color: #2c3e50; /* Dark blue-grey for text */
+/* Light Mode Background */
+.light-mode-background {
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    width: 100vw;
+    height: 100vh;
+    background-color: #ffffff;
+    background-image: linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+                      linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+    background-size: 6rem 4rem;
 }
 
-/* Dark Mode Gradient */
-body.dark-mode {
-    background: linear-gradient(135deg, #a9a9a9, #000000); /* Light gray to black gradient */
-    color: #ffffff;
+.light-mode-background::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    background: radial-gradient(circle 500px at 50% 200px, #C9EBFF, transparent);
 }
+
+/* Dark Mode Background */
+.dark-mode-background {
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    overflow: hidden;
+}
+
+.dark-mode-background::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(25% 25% at 10% 10%, #ffffff 0%, #ffffff 40%, #1a1a1a 100%);
+    z-index: -1;
+}
+
+/* Particles for Dark Mode Background */
+.dark-mode-background .particle {
+    position: absolute;
+    background-color: #ffffff;
+    border-radius: 50%;
+    animation: particleMove linear infinite;
+    /* Each particle's individual dimensions and animation settings can be added here */
+}
+
+/* Example particle dimensions and positioning */
+.dark-mode-background .particle:nth-child(1) {
+    width: 3.74px;
+    height: 5.51px;
+    top: 52.72%;
+    left: 88.71%;
+    animation-duration: 4.36s;
+    opacity: 0.76;
+}
+
+/* Add similar CSS for each unique particle element */
+@keyframes particleMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(10px); }
+}
+
+/* Hide backgrounds based on mode */
+.light-mode-background {
+    display: none;
+}
+
+body:not(.dark-mode) .light-mode-background {
+    display: block;
+}
+
+.dark-mode-background {
+    display: none;
+}
+
+body.dark-mode .dark-mode-background {
+    display: block;
+}
+
+
 
 /* Container Styles */
 .container {
@@ -35,32 +109,270 @@ body.dark-mode {
 
 /* Heading Styles */
 h1 {
-   font-size: 2.5rem; /* Smaller font size */
-   font-weight: 700;
+   font-size: 2.5rem;
+   font-weight: bold;
+    margin-top: 100px;
    margin-bottom: 20px;
-   color: #2c3e50; /* Same dark blue-grey */
-   font-style: italic; /* Italic font */
+   color: #2c3e50;
+   font-style: italic;
+   transition: color 0.3s;
+}
+
+body.dark-mode h1 {
+    color: #ffffff;
+}
+
+/* Developer Cards Section */
+.developers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding-top: 20px;
+}
+
+/* Developer Card Styles */
+.developer {
+    width: 250px; /* Fixed width */
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #2c3e50;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+    text-align: center;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+body.dark-mode .developer {
+    background-color: #333333;
+    border-color: #555555;
+    color: #ffffff;
+}
+
+/* Developer Card Heading */
+.developer h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 10px 0;
+}
+
+.developer p {
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+/* Email Link Styling */
+.developer a {
+    color: #1a73e8;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+body.dark-mode .developer a {
+    color: #bbdefb;
+}
+
+.developer a:hover {
+    text-decoration: underline;
+}
+
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    transition: background-color 0.3s;
+    gap: 15px;
+}
+
+.dark-mode .header {
+    background-color: rgba(18, 18, 18, 0.9);
+}
+/* Header Buttons and Dropdown Styling */
+.header a, .dropdown button {
+    padding: 10px 15px;
+    background-color: #333;
+    color: #ffffff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.header a:hover, .dropdown button:hover {
+    background-color: #555;
+}
+
+.dark-mode .header a, .dark-mode .dropdown button {
+    background-color: #ffffff;
+    color: #333;
+}
+
+/* Dropdown Styling */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #ffffff;
+    min-width: 150px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: #f9f9f9;
+}
+
+.dropdown-content a:hover {
+    background-color: #eee;
+}
+
+.dark-mode .dropdown-content {
+    background-color: #333;
+}
+
+.dark-mode .dropdown-content a {
+    color: #ffffff;
+}
+
+.dark-mode .dropdown-content a:hover {
+    background-color: #555;
+}
+
+/* Ensure content starts below the header */
+.content {
+    margin-top: 80px; /* Adjust based on header height */
+    text-align: center;
+}
+
+/* Heading Styles */
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    font-style: italic;
+    transition: color 0.3s;
+}
+
+body.dark-mode h1 {
+    color: #ffffff;
+}
+
+
+/* Logout Link and Dropdown Button */
+.logout, .dropdown button {
+    padding: 10px 15px;
+    background-color: #333;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+}
+
+.logout:hover, .dropdown button:hover {
+    background-color: #555;
+}
+
+.dark-mode .logout, .dark-mode .dropdown button {
+    background-color: #ffffff;
+    color: #333;
+}
+
+.dark-mode .logout:hover, .dark-mode .dropdown button:hover {
+    background-color: #ddd;
+}
+
+/* Dropdown Menu */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #ffffff;
+    min-width: 150px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    overflow: hidden;
+    z-index: 1;
+    transition: background-color 0.3s;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s;
+}
+
+.dropdown-content a:hover {
+    background-color: #eee;
+}
+
+.dark-mode .dropdown-content {
+    background-color: #333;
+}
+
+.dark-mode .dropdown-content a {
+    color: #ffffff;
+}
+
+.dark-mode .dropdown-content a:hover {
+    background-color: #555;
 }
 
 /* Button Styles */
 .contact-devs, .dark-mode-toggle {
     position: fixed;
+    top: 20px;
     right: 20px;
     background-color: transparent;
+    color: #333;
+    text-decoration: none;
     font-size: 16px;
     padding: 8px;
     cursor: pointer;
     transition: color 0.3s;
 }
 
-.contact-devs {
-    top: 20px;
-    color: #2c3e50;
-}
-
 .dark-mode-toggle {
-    top: 60px; /* Position below "Contact Developers" button */
-    color: #2c3e50;
+    top: 60px; /* Position it below the "Contact Developers" button */
 }
 
 .contact-devs:hover, .dark-mode-toggle:hover {
@@ -69,5 +381,6 @@ h1 {
 
 .dark-mode .contact-devs,
 .dark-mode .dark-mode-toggle {
-    color: #ffffff;
+    color: #fff;
 }
+

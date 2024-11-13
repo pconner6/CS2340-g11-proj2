@@ -1,105 +1,201 @@
-<!-- devs.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Meet Our Developers</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'app/homepage.css' %}">
     <style>
+        /* Base styling */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            font-family: 'Arial', sans-serif;
+            color: #333;
             margin: 0;
-            padding: 20px;
-        }
-        .developers {
+            padding-top: 70px; /* Offset for fixed header */
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
         }
-        .developer {
-            margin: 20px;
-            text-align: center;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 10px;
-            background-color: #fff;
-            width: 250px; /* Set a fixed width for the developer cards */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+        /* Light mode background */
+        .light-mode-background {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            width: 100vw;
+            height: 100vh;
+            background-color: #ffffff;
+            background-image: linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+                              linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+            background-size: 6rem 4rem;
         }
-        .developer h3 {
-            margin: 10px 0;
+
+        /* Additional overlay for light mode */
+        .light-mode-background::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            background: radial-gradient(circle 500px at 50% 200px, #C9EBFF, transparent);
         }
-        .developer p {
-            margin: 5px 0;
+
+        /* Dark mode background */
+        .dark-mode-background {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            width: 100vw;
+            height: 100vh;
+            background-color: #1a1a1a;
+            background-image: radial-gradient(25% 25% at 10% 10%, #ffffff 0%, #ffffff 40%, #1a1a1a 100%);
+        }
+
+        /* Hide backgrounds based on mode */
+        .light-mode-background {
+            display: none;
+        }
+
+        body:not(.dark-mode) .light-mode-background {
+            display: block;
+        }
+
+        .dark-mode-background {
+            display: none;
+        }
+
+        body.dark-mode .dark-mode-background {
+            display: block;
+        }
+
+
+
+        /* Header links */
+        .header a,
+        .dropdown button {
+            padding: 10px 15px;
+            background-color: #333;
+            color: #ffffff;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-right: 20px;
+        }
+
+        .header a:hover,
+        .dropdown button:hover {
+            background-color: #555;
+        }
+
+        /* Dark mode adjustments */
+        .dark-mode .header {
+            background-color: rgba(18, 18, 18, 0.9);
+        }
+
+        .dark-mode .header a,
+        .dark-mode .dropdown button {
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        /* Dropdown and content */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #ffffff;
+            min-width: 150px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Title and button styling */
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-top: 30px;
+            animation: fadeIn 2s ease-in-out forwards;
+            opacity: 0;
+        }
+
+        /* Keyframe animations */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
-    <h1>Meet Our Developers</h1>
-    <div class="developers">
-        {% for developer in developers %}
-            <div class="developer">
-                <h3>{{ developer.name }}</h3>
-                <p>Email: <a href="mailto:{{ developer.email }}">{{ developer.email }}</a></p>
-                <p>About: {{ developer.about }}</p>
-            </div>
-        {% endfor %}
-    </div>
-<!-- Dark/Light Mode Toggle Button -->
-<a href="#" id="mode-toggle" class="mode-toggle">Dark Mode</a>
+    <div class="light-mode-background"></div>
+    <div class="dark-mode-background"></div>
 
-<script>
-    // Function to apply the current theme mode
-    function applyTheme(isDarkMode) {
-        if (isDarkMode) {
+    <header class="header">
+        <a href="{% url 'logout' %}" class="logout">Back</a>
+        <div class="dropdown">
+            <button>Personalization</button>
+            <div class="dropdown-content">
+                <a href="#" id="mode-toggle" class="dark-mode-toggle">Dark Mode</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="content">
+        <h1>Meet Our Developers</h1>
+        <div class="developers">
+            {% for developer in developers %}
+                <div class="developer">
+                    <h3>{{ developer.name }}</h3>
+                    <p>Email: <a href="mailto:{{ developer.email }}">{{ developer.email }}</a></p>
+                    <p>About: {{ developer.about }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <script>
+        const toggleButton = document.getElementById('mode-toggle');
+
+        // Apply or remove dark mode on hover
+        toggleButton.addEventListener('mouseenter', () => {
+            document.body.classList.add('dark-mode');
+        });
+
+        toggleButton.addEventListener('mouseleave', () => {
+            const isDarkMode = localStorage.getItem('theme') === 'dark';
+            if (!isDarkMode) {
+                document.body.classList.remove('dark-mode');
+            }
+        });
+
+        // Toggle dark mode permanently on click
+        toggleButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            toggleButton.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        });
+
+        // Apply stored theme preference on load
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'dark') {
             document.body.classList.add('dark-mode');
             toggleButton.textContent = 'Light Mode';
-            localStorage.setItem('theme', 'dark');
-        } else {
-            document.body.classList.remove('dark-mode');
-            toggleButton.textContent = 'Dark Mode';
-            localStorage.setItem('theme', 'light');
         }
-    }
-
-    // Retrieve stored theme preference and apply it
-    const storedTheme = localStorage.getItem('theme');
-    const isDarkMode = storedTheme === 'dark';
-    const toggleButton = document.getElementById('mode-toggle');
-    applyTheme(isDarkMode);
-
-    // Add event listener for toggle button
-    toggleButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        const currentMode = document.body.classList.contains('dark-mode');
-        applyTheme(!currentMode);
-    });
-</script>
-
-<style>
-    /* Styling for the dark/light mode toggle button */
-    .mode-toggle {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background-color: transparent;
-        color: #333;
-        text-decoration: none;
-        font-size: 16px;
-        padding: 8px;
-        cursor: pointer;
-    }
-    .mode-toggle:hover {
-        text-decoration: underline;
-    }
-    /* Dark mode styles */
-    .dark-mode {
-        background-color: #121212;
-        color: #ffffff;
-    }
-</style>
-
+    </script>
 </body>
 </html>
+
 
 
