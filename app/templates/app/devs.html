@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meet Our Developers</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'app/homepage.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
     <style>
         /* Base styling */
         body {
@@ -15,7 +18,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 100vh;
             transition: background-color 0.3s, color 0.3s;
         }
@@ -33,17 +36,6 @@
             background-size: 6rem 4rem;
         }
 
-        /* Additional overlay for light mode */
-        .light-mode-background::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            top: 0;
-            background: radial-gradient(circle 500px at 50% 200px, #C9EBFF, transparent);
-        }
-
         /* Dark mode background */
         .dark-mode-background {
             position: fixed;
@@ -55,27 +47,41 @@
             background-image: radial-gradient(25% 25% at 10% 10%, #ffffff 0%, #ffffff 40%, #1a1a1a 100%);
         }
 
-        /* Hide backgrounds based on mode */
-        .light-mode-background {
-            display: none;
+        /* Header styling */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 100;
         }
 
-        body:not(.dark-mode) .light-mode-background {
-            display: block;
+        .header-left {
+            display: flex;
+            align-items: center;
         }
 
-        .dark-mode-background {
-            display: none;
+        /* Back button styling */
+        .back {
+            padding: 10px 15px;
+            background-color: #333;
+            color: #ffffff;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
         }
 
-        body.dark-mode .dark-mode-background {
-            display: block;
+        .back:hover {
+            background-color: #555;
         }
 
-
-
-        /* Header links */
-        .header a,
+        /* Dropdown button styling */
         .dropdown button {
             padding: 10px 15px;
             background-color: #333;
@@ -84,10 +90,8 @@
             text-decoration: none;
             font-weight: bold;
             transition: background-color 0.3s;
-            margin-right: 20px;
         }
 
-        .header a:hover,
         .dropdown button:hover {
             background-color: #555;
         }
@@ -97,13 +101,12 @@
             background-color: rgba(18, 18, 18, 0.9);
         }
 
-        .dark-mode .header a,
+        .dark-mode .header .back,
         .dark-mode .dropdown button {
             background-color: #ffffff;
             color: #333;
         }
 
-        /* Dropdown and content */
         .dropdown-content {
             display: none;
             position: absolute;
@@ -124,6 +127,7 @@
         .title {
             font-size: 3rem;
             font-weight: bold;
+            text-align: center;
             margin-top: 30px;
             animation: fadeIn 2s ease-in-out forwards;
             opacity: 0;
@@ -136,12 +140,20 @@
         }
     </style>
 </head>
+
 <body>
+    <!-- Background Divs -->
     <div class="light-mode-background"></div>
     <div class="dark-mode-background"></div>
 
+    <!-- Header with Back button (left) and Personalization dropdown (right) -->
     <header class="header">
-        <a href="{% url 'logout' %}" class="logout">Back</a>
+        <!-- Left section of the header (Back button) -->
+        <div class="header-left">
+            <a href="{% url 'logout' %}" class="back">Back</a>
+        </div>
+
+        <!-- Right section of the header (Personalization dropdown) -->
         <div class="dropdown">
             <button>Personalization</button>
             <div class="dropdown-content">
@@ -150,8 +162,10 @@
         </div>
     </header>
 
+    <!-- Animated Title -->
+    <h1 class="title">Meet Our Developers</h1>
+
     <main class="content">
-        <h1>Meet Our Developers</h1>
         <div class="developers">
             {% for developer in developers %}
                 <div class="developer">
@@ -196,6 +210,4 @@
     </script>
 </body>
 </html>
-
-
 
