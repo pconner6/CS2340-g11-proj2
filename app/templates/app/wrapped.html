@@ -4,171 +4,257 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Spotify Wrapped</title>
-
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Centering container and general styling */
+        /* Base styles for the entire site */
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f4f4f4; /* Light gray background */
-            color: #333; /* Darker text color */
-        }
-
-        .container {
-            max-width: 600px;
-            padding: 20px;
-            background-color: #ffffff; /* White background */
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 1rem;
-            color: #444; /* Neutral darker gray */
-        }
-
-        select {
-            padding: 8px 12px;
-            margin: 15px 0;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
+            font-family: 'Arial', sans-serif;
             color: #333;
-            cursor: pointer;
+            margin: 0;
+            padding-top: 70px; /* Offset for fixed header */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            height: auto;
+            padding-bottom: 50px; /* Make space for the carousel */
             transition: background-color 0.3s, color 0.3s;
         }
 
-        select:hover {
-            background-color: #e2e2e2;
+        /* Light Mode Background */
+        .light-mode-background {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            width: 100vw;
+            height: 100vh;
+            background-color: #ffffff;
+            background-image: linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+                              linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+            background-size: 6rem 4rem;
         }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 1rem 0;
+        .light-mode-background::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            background: radial-gradient(circle 500px at 50% 200px, #C9EBFF, transparent);
         }
 
-        li {
-            padding: 10px;
-            border-bottom: 1px solid #e0e0e0;
-            text-align: left;
+        /* Dark Mode Background */
+        .dark-mode-background {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000000;
         }
 
-        a {
-            color: #007acc; /* Blue accent for links */
+        .dark-mode-background::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(25% 25% at 10% 10%, #ffffff 0%, #ffffff 40%, #1a1a1a 100%);
+            z-index: -1;
+        }
+
+        /* Hide backgrounds based on mode */
+        .light-mode-background {
+            display: none;
+        }
+
+        body:not(.dark-mode) .light-mode-background {
+            display: block;
+        }
+
+        .dark-mode-background {
+            display: none;
+        }
+
+        body.dark-mode .dark-mode-background {
+            display: block;
+        }
+
+        /* Button Styles */
+        .contact-devs, .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: transparent;
+            color: #333;
             text-decoration: none;
+            font-size: 16px;
+            padding: 8px;
+            cursor: pointer;
+            transition: color 0.3s;
         }
 
-        a:hover {
+        .dark-mode-toggle {
+            top: 60px; /* Position it below the "Contact Developers" button */
+        }
+
+        .contact-devs:hover, .dark-mode-toggle:hover {
             text-decoration: underline;
         }
 
-        label {
+        .dark-mode .contact-devs,
+        .dark-mode .dark-mode-toggle {
+            color: #fff;
+        }
+
+        /* Make the rest of the page end above the carousel */
+        body {
+            padding-bottom: 16rem; /* Adjust based on carousel height */
+        }
+
+        /* Carousel CSS */
+        @keyframes carousel {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Carousel wrapper */
+        .carousel-wrapper {
+            flex-grow: 1;
+            width: 100%;
+            height: 500px; /* Let height adjust based on content */
+            margin-top: 20px; /* Space from the content above */
+        }
+
+        .carousel {
+            display: flex;
+            width: 100%;
+            height: 100%;  /* Increased height of the carousel to accommodate images */
+        }
+
+        .carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;  /* Ensure the image is fully visible without cropping */
+        }
+
+        /* Spotify login button */
+        .spotify-login {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #1DB954;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 30px;
             font-weight: bold;
-            margin-right: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .scroll-indicator:hover {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Your Past Spotify Wrapped</h1>
+    <!-- Light/Dark Mode Backgrounds -->
+    <div class="light-mode-background"></div>
+    <div class="dark-mode-background"></div>
+
+    <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-10">
+        <h1 class="text-3xl font-semibold text-center mb-6">Your Past Spotify Wrapped</h1>
 
         <!-- Dropdown Menu for Time Range Selection -->
-        <form method="get" id="timeRangeForm">
-            <label for="timeRange">Select Time Range:</label>
-            <select name="time_range" id="timeRange" onchange="document.getElementById('timeRangeForm').submit()">
+        <form method="get" id="timeRangeForm" class="text-center mb-4">
+            <label for="timeRange" class="font-semibold">Select Time Range:</label>
+            <select
+                name="time_range"
+                id="timeRange"
+                onchange="document.getElementById('timeRangeForm').submit()"
+                class="ml-2 px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg"
+            >
                 <option value="short_term" {% if selected_time_range == 'short_term' %}selected{% endif %}>Short Term (Last 4 Weeks)</option>
                 <option value="medium_term" {% if selected_time_range == 'medium_term' %}selected{% endif %}>Medium Term (Last 6 Months)</option>
                 <option value="long_term" {% if selected_time_range == 'long_term' %}selected{% endif %}>Long Term (All Time)</option>
             </select>
         </form>
 
+        <!-- Error Handling -->
         {% if error %}
-            <p>Error: {{ error }}</p>
+            <p class="text-red-500 text-center">Error: {{ error }}</p>
         {% else %}
-            <h2>Top Tracks</h2>
-            <ul>
+            <!-- Top Tracks -->
+            <h2 class="text-xl font-bold mt-4">Top Tracks</h2>
+            <ul class="mt-2 space-y-2">
                 {% for track in top_tracks %}
-                    <li>
-                        <strong>{{ track.name }}</strong> by
-                        {% for artist in track.artists %}
-                            {{ artist.name }}{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                        <br> Album: {{ track.album.name }}
-                    </li>
+                <li class="p-3 rounded-lg bg-gray-100 shadow hover:bg-gray-200 transition duration-300">
+                    <strong>{{ track.name }}</strong> by
+                    {% for artist in track.artists %}
+                        {{ artist.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                    <br> <span class="italic">Album: {{ track.album.name }}</span>
+                </li>
                 {% endfor %}
             </ul>
 
-            <h2>Top Artists</h2>
-            <ul>
+            <!-- Top Artists -->
+            <h2 class="text-xl font-bold mt-6">Top Artists</h2>
+            <ul class="mt-2 space-y-2">
                 {% for artist in top_artists %}
-                    <li><strong>{{ artist.name }}</strong></li>
+                <li class="p-3 rounded-lg bg-gray-100 shadow hover:bg-gray-200 transition duration-300">
+                    <strong>{{ artist.name }}</strong>
+                </li>
                 {% endfor %}
             </ul>
         {% endif %}
 
-        <a href="{% url 'home' %}">Back to Home</a>
-        <!-- Dark/Light Mode Toggle Button -->
-<a href="#" id="mode-toggle" class="mode-toggle">Dark Mode</a>
+        <!-- Back to Home Link -->
+        <div class="mt-6 text-center">
+            <a href="{% url 'home' %}" class="text-blue-500 hover:text-blue-700">Back to Home</a>
+        </div>
 
-<script>
-    // Function to apply the current theme mode
-    function applyTheme(isDarkMode) {
-        if (isDarkMode) {
-            document.body.classList.add('dark-mode');
-            toggleButton.textContent = 'Light Mode';
-            localStorage.setItem('theme', 'dark');
-        } else {
-            document.body.classList.remove('dark-mode');
-            toggleButton.textContent = 'Dark Mode';
-            localStorage.setItem('theme', 'light');
-        }
-    }
-
-    // Retrieve stored theme preference and apply it
-    const storedTheme = localStorage.getItem('theme');
-    const isDarkMode = storedTheme === 'dark';
-    const toggleButton = document.getElementById('mode-toggle');
-    applyTheme(isDarkMode);
-
-    // Add event listener for toggle button
-    toggleButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        const currentMode = document.body.classList.contains('dark-mode');
-        applyTheme(!currentMode);
-    });
-</script>
-
-<style>
-    /* Styling for the dark/light mode toggle button */
-    .mode-toggle {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background-color: transparent;
-        color: #333;
-        text-decoration: none;
-        font-size: 16px;
-        padding: 8px;
-        cursor: pointer;
-    }
-    .mode-toggle:hover {
-        text-decoration: underline;
-    }
-    /* Dark mode styles */
-    .dark-mode {
-        background-color: #121212;
-        color: #ffffff;
-    }
-</style>
-
+        <!-- Dark Mode Toggle Button -->
+        <a href="#" id="mode-toggle" class="dark-mode-toggle">Dark Mode</a>
     </div>
+
+    <script>
+        // Function to apply the current theme mode
+        function applyTheme(isDarkMode) {
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Retrieve stored theme preference and apply it
+        const storedTheme = localStorage.getItem('theme');
+        const isDarkMode = storedTheme === 'dark';
+        applyTheme(isDarkMode);
+
+        // Add event listener for toggle button
+        const toggleButton = document.getElementById('mode-toggle');
+        toggleButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            const currentMode = document.body.classList.contains('dark-mode');
+            applyTheme(!currentMode);
+        });
+    </script>
 </body>
 </html>
+
+
