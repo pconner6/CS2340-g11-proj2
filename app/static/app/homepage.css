@@ -225,12 +225,13 @@ body.dark-mode .developer a {
 .dropdown-content {
     display: none;
     position: absolute;
-    right: 0;
-    background-color: #ffffff;
-    min-width: 150px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    background-color: #333;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     border-radius: 6px;
-    overflow: hidden;
+    z-index: 1000;
+    text-align: left; /* Ensures text aligns to the left */
+    margin-top: 5px; /* Adds some spacing below the button */
 }
 
 .dropdown:hover .dropdown-content {
@@ -238,11 +239,25 @@ body.dark-mode .developer a {
 }
 
 .dropdown-content a {
-    padding: 10px 15px;
-    color: #333;
+    display: block;
+    padding: 12px 16px;
+    color: #ffffff;
     text-decoration: none;
     font-weight: bold;
-    background-color: #f9f9f9;
+    background-color: #333;
+    border-bottom: 1px solid #444;
+}
+
+.dropdown button {
+    padding: 10px 15px;
+    background-color: #333;
+    color: #ffffff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: none;
 }
 
 .dropdown-content a:hover {
@@ -261,6 +276,10 @@ body.dark-mode .developer a {
     background-color: #555;
 }
 
+/* Ensure consistent spacing */
+.dropdown-content a:last-child {
+    border-bottom: none;
+}
 /* Ensure content starts below the header */
 .content {
     margin-top: 80px; /* Adjust based on header height */
