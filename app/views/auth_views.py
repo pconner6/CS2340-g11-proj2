@@ -1,4 +1,5 @@
 import requests
+import base64
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.utils import timezone
@@ -19,19 +20,27 @@ def spotify_login(request):
     )
     return redirect(auth_url)
 def spotify_callback(request):
+    
+    
     code = request.GET.get('code')
 
-    # Exchange the authorization code for an access token
-    token_url = 'https://accounts.spotify.com/api/token'
-    token_data = {
-        'grant_type': 'authorization_code',
-        'code': code,
-        'redirect_uri': settings.SPOTIFY_REDIRECT_URI,
-        'client_id': settings.SPOTIFY_CLIENT_ID,
-        'client_secret': settings.SPOTIFY_CLIENT_SECRET,
+    # Step 1: Create the Basic Auth header
+    auth_header = base64.b64encode(f"{settings.SPOTIFY_CLIENT_ID}:{settings.SPOTIFY_CLIENT_SECRET}".encode()).decode('utf-8')
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": f"Basic {auth_header}"
     }
 
-    token_response = requests.post(token_url, data=token_data)
+    # Step 2: Prepare the form data
+    data = {
+        "code": code,
+        "redirect_uri": settings.SPOTIFY_REDIRECT_URI,
+        "grant_type": "authorization_code"
+    }
+
+    # Step 3: Make the POST request to get the access token
+    url = "https://accounts.spotify.com/api/token"
+    token_response = requests.post(url, headers=headers, data=data)
     token_json = token_response.json()
 
     access_token = token_json.get('access_token')
@@ -44,7 +53,7 @@ def spotify_callback(request):
         return redirect('home')  # Redirect to the home page
 
     # Handle the case where access token is not received
-    return render(request, 'app/callback.html', {'error': 'Failed to retrieve access token.'})
+    return render(request, 'app/callback.html', {'access_token' : access_token})
 
 
 def home(request):
@@ -62,29 +71,24 @@ def view_wrapped(request):
         'Authorization': f'Bearer {access_token}'
     }
 
-    # Get selected time range from request, default to 'short_term'
-    time_range = request.GET.get('time_range', 'short_term')
-
-    # Fetch top tracks and artists for the selected time range
-    top_tracks_url = f'https://api.spotify.com/v1/me/top/tracks?limit=10&time_range={time_range}'
+    # Fetch top tracks
+    top_tracks_url = 'https://api.spotify.com/v1/me/top/tracks?limit=10'
     top_tracks_response = requests.get(top_tracks_url, headers=headers)
 
-    top_artists_url = f'https://api.spotify.com/v1/me/top/artists?limit=10&time_range={time_range}'
+    # Fetch top artists
+    top_artists_url = 'https://api.spotify.com/v1/me/top/artists?limit=10'
     top_artists_response = requests.get(top_artists_url, headers=headers)
-
+    
     if top_tracks_response.status_code == 200 and top_artists_response.status_code == 200:
         top_tracks = top_tracks_response.json().get('items', [])
         top_artists = top_artists_response.json().get('items', [])
-
         return render(request, 'app/wrapped.html', {
             'top_tracks': top_tracks,
             'top_artists': top_artists,
-            'selected_time_range': time_range
         })
     else:
         return render(request, 'app/wrapped.html', {
             'error': 'Failed to retrieve data from Spotify.',
-            'selected_time_range': time_range
         })
 
 
@@ -169,3 +173,4 @@ def holiday_wrapped(request):
         return render(request, 'app/holiday_wrapped.html', {
             'error': 'Failed to retrieve data from Spotify.',
         })
+
