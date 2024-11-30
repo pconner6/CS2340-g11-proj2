@@ -2,163 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meet Our Developers</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'app/homepage.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
     <style>
-        /* Base styling */
-        body {
-            font-family: 'Arial', sans-serif;
-            color: #333;
-            margin: 0;
-            padding-top: 70px; /* Offset for fixed header */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        /* Light mode background */
-        .light-mode-background {
-            position: fixed;
-            inset: 0;
-            z-index: -10;
-            width: 100vw;
-            height: 100vh;
-            background-color: #ffffff;
-            background-image: linear-gradient(to right, #f0f0f0 1px, transparent 1px),
-                              linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
-            background-size: 6rem 4rem;
-        }
-
-        /* Additional overlay for light mode */
-        .light-mode-background::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            top: 0;
-            background: radial-gradient(circle 500px at 50% 200px, #C9EBFF, transparent);
-        }
-
-        /* Dark mode background */
-        .dark-mode-background {
-            position: fixed;
-            inset: 0;
-            z-index: -10;
-            width: 100vw;
-            height: 100vh;
-            background-color: #1a1a1a;
-            background-image: radial-gradient(25% 25% at 10% 10%, #ffffff 0%, #ffffff 40%, #1a1a1a 100%);
-        }
-
-        /* Hide backgrounds based on mode */
-        .light-mode-background {
-            display: none;
-        }
-
-        body:not(.dark-mode) .light-mode-background {
-            display: block;
-        }
-
-        .dark-mode-background {
-            display: none;
-        }
-
-        body.dark-mode .dark-mode-background {
-            display: block;
-        }
-
-
-
-        /* Header links */
-        .header a,
-        .dropdown button {
-            padding: 10px 15px;
-            background-color: #333;
-            color: #ffffff;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            margin-right: 20px;
-        }
-
-        .header a:hover,
-        .dropdown button:hover {
-            background-color: #555;
-        }
-
-        /* Dark mode adjustments */
-        .dark-mode .header {
-            background-color: rgba(18, 18, 18, 0.9);
-        }
-
-        .dark-mode .header a,
-        .dark-mode .dropdown button {
-            background-color: #ffffff;
-            color: #333;
-        }
-
-        /* Dropdown and content */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: #ffffff;
-            min-width: 150px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            border-radius: 6px;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        /* Title and button styling */
-        .title {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-top: 30px;
-            animation: fadeIn 2s ease-in-out forwards;
-            opacity: 0;
-        }
-
-        /* Keyframe animations */
+        /* Custom animations */
         @keyframes fadeIn {
             0% { opacity: 0; transform: translateY(-10px); }
             100% { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body>
+
+<body class="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-200 transition duration-300">
+    <!-- Background Effects -->
     <div class="light-mode-background"></div>
     <div class="dark-mode-background"></div>
 
-    <header class="header">
-        <a href="{% url 'logout' %}" class="logout">Back</a>
-        <div class="dropdown">
-            <button>Personalization</button>
-            <div class="dropdown-content">
-                <a href="#" id="mode-toggle" class="dark-mode-toggle">Dark Mode</a>
+    <!-- Header -->
+    <header class="header fixed top-0 w-full flex justify-between items-center px-6 py-4 bg-white dark:bg-gray-900 shadow-md z-50">
+        <!-- Back Button -->
+        <a href="{% url 'logout' %}" class="back bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-900 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-gray-300 transition">
+            Back
+        </a>
+
+        <!-- Personalization Dropdown -->
+        <div class="dropdown relative">
+            <button class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-900 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-gray-300 transition">
+                Personalization
+            </button>
+            <div class="dropdown-content absolute right-0 mt-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-md rounded-lg overflow-hidden">
+                <a href="#" id="mode-toggle" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Dark Mode</a>
             </div>
         </div>
     </header>
 
-    <main class="content">
-        <h1>Meet Our Developers</h1>
-        <div class="developers">
+    <!-- Title -->
+    <main class="mt-20 px-6 text-center">
+        <h1 class="text-4xl font-extrabold mb-6 animate-fadeIn">
+            Meet Our Developers
+        </h1>
+
+        <!-- Developer Information -->
+        <div class="space-y-10">
             {% for developer in developers %}
-                <div class="developer">
-                    <h3>{{ developer.name }}</h3>
-                    <p>Email: <a href="mailto:{{ developer.email }}">{{ developer.email }}</a></p>
-                    <p>About: {{ developer.about }}</p>
-                </div>
+            <!-- Developer Block with Hover Effect -->
+            <section class="text-left bg-gray-50 dark:bg-gray-900 px-8 py-6 rounded-lg shadow-lg transform transition hover:scale-105 hover:shadow-xl">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                    {{ developer.name }}
+                </h2>
+                <p class="text-gray-700 dark:text-gray-400">
+                    <strong>Email:</strong>
+                    <a href="mailto:{{ developer.email }}" class="text-blue-500 hover:text-blue-700 dark:hover:text-blue-300 transition">
+                        {{ developer.email }}
+                    </a>
+                </p>
+                <p class="text-gray-700 dark:text-gray-400 mt-2">
+                    {{ developer.about }}
+                </p>
+            </section>
             {% endfor %}
         </div>
     </main>
@@ -166,7 +71,7 @@
     <script>
         const toggleButton = document.getElementById('mode-toggle');
 
-        // Apply or remove dark mode on hover
+        // Hover effects for dark mode
         toggleButton.addEventListener('mouseenter', () => {
             document.body.classList.add('dark-mode');
         });
@@ -196,6 +101,7 @@
     </script>
 </body>
 </html>
+
 
 
 

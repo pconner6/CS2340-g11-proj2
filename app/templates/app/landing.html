@@ -24,6 +24,16 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
+        h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 100px;
+            margin-bottom: 40px;
+            animation: fadeIn 2s ease-in-out forwards;
+            opacity: 0;
+        }
+
         /* Light mode background */
         .light-mode-background {
             position: fixed;
@@ -60,6 +70,11 @@
             background-color: rgba(255, 255, 255, 0.9);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             z-index: 100;
+        }
+
+         .header-left {
+            display: flex;
+            align-items: center;
         }
 
         .header a,
@@ -209,3 +224,4 @@
     </div>
 </body>
 </html>
+
