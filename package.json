@@ -1,0 +1,15 @@
+{
+  "name": "cs2340-g11-proj2",
+  "version": "1.0.0",
+  "description": "## Description ##",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tailwindcss": "^3.4.14"
+  }
+}
