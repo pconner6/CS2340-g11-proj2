@@ -4,53 +4,291 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Holiday Spotify Wrapped</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Base styles for the entire site */
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            margin: 0;
+            padding-top: 70px; /* Offset for fixed header */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            height: auto;
+            padding-bottom: 50px; /* Make space for the carousel */
+            background-color: #fefefe; /* Light festive background */
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Christmas-themed Background */
+        .light-mode-background {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            width: 100vw;
+            height: 100vh;
+            background-color: #fff5f5;
+            background-image: url('https://www.example.com/christmas-snowflakes.png'), linear-gradient(to right, #ffcccc 1px, transparent 1px), linear-gradient(to bottom, #ffcccc 1px, transparent 1px);
+            background-size: 10rem 10rem;
+        }
+
+        .light-mode-background::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            background: radial-gradient(circle 500px at 50% 200px, #ffebcd, transparent);
+        }
+
+        /* Dark Mode Background */
+        .dark-mode-background {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0a0a0a;
+            background-image: url('https://www.example.com/christmas-snowflakes-dark.png');
+            background-size: cover;
+        }
+
+        .dark-mode-background::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(25% 25% at 10% 10%, #ffffff 0%, #ffffff 40%, #ff0000 100%);
+            z-index: -1;
+        }
+
+        /* Hide backgrounds based on mode */
+        .light-mode-background {
+            display: none;
+        }
+
+        body:not(.dark-mode) .light-mode-background {
+            display: block;
+        }
+
+        .dark-mode-background {
+            display: none;
+        }
+
+        body.dark-mode .dark-mode-background {
+            display: block;
+        }
+
+        /* Button Styles */
+        .contact-devs, .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: transparent;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px;
+            cursor: pointer;
+            transition: color 0.3s;
+            font-weight: bold;
+        }
+
+        .dark-mode-toggle {
+            top: 60px; /* Position it below the "Contact Developers" button */
+        }
+
+        .contact-devs:hover, .dark-mode-toggle:hover {
+            text-decoration: underline;
+            color: #ff6f61;
+        }
+
+        .dark-mode .contact-devs,
+        .dark-mode .dark-mode-toggle {
+            color: #fff;
+        }
+
+        /* Make the rest of the page end above the carousel */
+        body {
+            padding-bottom: 16rem; /* Adjust based on carousel height */
+        }
+
+        /* Carousel CSS */
+        @keyframes carousel {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Carousel wrapper */
+        .carousel-wrapper {
+            flex-grow: 1;
+            width: 100%;
+            height: 500px; /* Let height adjust based on content */
+            margin-top: 20px; /* Space from the content above */
+        }
+
+        .carousel {
+            display: flex;
+            width: 100%;
+            height: 100%;  /* Increased height of the carousel to accommodate images */
+        }
+
+        .carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;  /* Ensure the image is fully visible without cropping */
+        }
+
+        /* Spotify login button */
+        .spotify-login {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #1DB954;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .scroll-indicator:hover {
+            opacity: 1;
+        }
+
+        /* Christmas-themed Text */
+        h1, h2 {
+            color: #ff4040; /* Red color for titles */
+        }
+
+        .christmas-icon {
+            font-size: 2rem;
+            margin-right: 10px;
+            color: #ff4040;
+        }
+
+        .festive-btn {
+            background-color: #ff6f61;
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-weight: bold;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        .festive-btn:hover {
+            background-color: #ff4040;
+        }
+    </style>
 </head>
 <body>
-    <h1>Your Holiday Spotify Wrapped</h1>
+    <!-- Light/Dark Mode Backgrounds -->
+    <div class="light-mode-background"></div>
+    <div class="dark-mode-background"></div>
 
-    {% if error %}
-        <p>Error: {{ error }}</p>
-    {% else %}
-        <h2>Christmas Top Tracks</h2>
-        <ul>
-            {% for track in holiday_data.Christmas %}
-                <li>
+    <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg mt-10">
+        <h1 class="text-3xl font-semibold text-center mb-6"><span class="christmas-icon">🎄</span>Your Holiday Spotify Wrapped</h1>
+
+        <!-- Dropdown Menu for Time Range Selection -->
+        <form method="get" id="timeRangeForm" class="text-center mb-4">
+            <label for="timeRange" class="font-semibold text-xl">Select Time Range:</label>
+            <select
+                name="time_range"
+                id="timeRange"
+                onchange="document.getElementById('timeRangeForm').submit()"
+                class="select"
+            >
+                <option value="short_term" {% if selected_time_range == 'short_term' %}selected{% endif %}>Short Term (Last 4 Weeks)</option>
+                <option value="medium_term" {% if selected_time_range == 'medium_term' %}selected{% endif %}>Medium Term (Last 6 Months)</option>
+                <option value="long_term" {% if selected_time_range == 'long_term' %}selected{% endif %}>Long Term (All Time)</option>
+            </select>
+        </form>
+
+        <!-- Error Handling -->
+        {% if error %}
+            <p class="text-red-500 text-center">Error: {{ error }}</p>
+        {% else %}
+            <!-- Christmas Top Tracks -->
+            <h2 class="text-xl font-bold mt-4 text-red-600">Christmas Top Tracks</h2>
+            <ul class="mt-2 space-y-2">
+                {% for track in holiday_data.Christmas %}
+                <li class="p-3 rounded-lg bg-red-100 shadow hover:bg-red-200 transition duration-300">
                     <strong>{{ track.name }}</strong> by
                     {% for artist in track.artists %}
                         {{ artist.name }}{% if not forloop.last %}, {% endif %}
                     {% endfor %}
-                    <br> Album: {{ track.album.name }}
+                    <br> <span class="italic">Album: {{ track.album.name }}</span>
                 </li>
-            {% empty %}
-                <li>No Christmas tracks found.</li>
-            {% endfor %}
-        </ul>
+                {% empty %}
+                <li class="p-3 rounded-lg bg-red-100">No Christmas tracks found.</li>
+                {% endfor %}
+            </ul>
 
-        <h2>Halloween Top Tracks</h2>
-        <ul>
-            {% for track in holiday_data.Halloween %}
-                <li>
+            <!-- Halloween Top Tracks -->
+            <h2 class="text-xl font-bold mt-6 text-orange-600">Halloween Top Tracks</h2>
+            <ul class="mt-2 space-y-2">
+                {% for track in holiday_data.Halloween %}
+                <li class="p-3 rounded-lg bg-orange-100 shadow hover:bg-orange-200 transition duration-300">
                     <strong>{{ track.name }}</strong> by
                     {% for artist in track.artists %}
                         {{ artist.name }}{% if not forloop.last %}, {% endif %}
                     {% endfor %}
-                    <br> Album: {{ track.album.name }}
+                    <br> <span class="italic">Album: {{ track.album.name }}</span>
                 </li>
-            {% empty %}
-                <li>No Halloween tracks found.</li>
-            {% endfor %}
-        </ul>
+                {% empty %}
+                <li class="p-3 rounded-lg bg-orange-100">No Halloween tracks found.</li>
+                {% endfor %}
+            </ul>
 
-        <h2>Top Artists</h2>
-        <ul>
-            {% for artist in top_artists %}
-                <li><strong>{{ artist.name }}</strong></li>
-            {% empty %}
-                <li>No top artists found.</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+            <!-- Top Artists -->
+            <h2 class="text-xl font-bold mt-6 text-green-600">Top Artists</h2>
+            <ul class="mt-2 space-y-2">
+                {% for artist in top_artists %}
+                <li class="p-3 rounded-lg bg-green-100 shadow hover:bg-green-200 transition duration-300">
+                    <strong>{{ artist.name }}</strong>
+                </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-    <a href="{% url 'home' %}">Back to Home</a>
+        <!-- Back to Home Link -->
+        <div class="mt-6 text-center">
+            <a href="{% url 'home' %}" class="festive-btn">Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Store user preferences for Dark Mode
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('click', function () {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    </script>
 </body>
 </html>
+
