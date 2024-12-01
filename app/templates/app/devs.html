@@ -9,7 +9,162 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
     <style>
-        /* Custom animations */
+        /* Base styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            margin: 0;
+            padding-top: 70px; /* Offset for fixed header */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 100px;
+            margin-bottom: 40px;
+            animation: fadeIn 2s ease-in-out forwards;
+            opacity: 0;
+        }
+
+        /* Light mode background */
+        .light-mode-background {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            width: 100vw;
+            height: 100vh;
+            background-color: #ffffff;
+            background-image: linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+                              linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+            background-size: 6rem 4rem;
+        }
+
+        /* Dark mode background */
+        .dark-mode-background {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            width: 100vw;
+            height: 100vh;
+            background-color: #1a1a1a;
+            background-image: radial-gradient(25% 25% at 10% 10%, #ffffff 0%, #ffffff 40%, #1a1a1a 100%);
+        }
+
+        .christmas-mode-background {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            width: 100vw;
+            height: 100vh;
+            background: url('/static/app/images/christmas.png') no-repeat center center fixed;
+        }
+
+        /* Halloween Mode Background */
+        .halloween-mode-background {
+            position: fixed;
+            inset: 0;
+            z-index: -10;
+            width: 100vw;
+            height: 100vh;
+            background-color: #FCC981;
+        }
+
+
+        /* Header styling */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+         .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .header a,
+        .dropdown button {
+            padding: 10px 15px;
+            background-color: #333;
+            color: #ffffff;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-right: 20px;
+        }
+
+        /* Title and button styling */
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 30px;
+            animation: fadeIn 2s ease-in-out forwards;
+            opacity: 0;
+        }
+
+        .spotify-login {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #1DB954;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .spotify-login:hover {
+            transform: scale(1.05);
+        }
+
+        /* Carousel styling */
+        .carousel-wrapper {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 300px; /* Adjust based on image size */
+            overflow: hidden;
+        }
+
+        .carousel {
+            display: flex;
+            width: 400%; /* 4 images at once, adjust this as necessary */
+            height: 100%;
+            animation: slide 40s linear infinite; /* Slower transition */
+        }
+
+        .carousel img {
+            width: 25%; /* Each image takes up 25% of the width */
+            height: 100%;
+            object-fit: cover; /* Ensures image maintains aspect ratio */
+        }
+
+        /* Keyframe animations for smooth sliding */
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-25%); }
+            50% { transform: translateX(-50%); }
+            75% { transform: translateX(-75%); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Keyframe animations for fade-in effect */
         @keyframes fadeIn {
             0% { opacity: 0; transform: translateY(-10px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -18,9 +173,11 @@
 </head>
 
 <body class="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-200 transition duration-300">
-    <!-- Background Effects -->
+    <!-- Background Divs -->
     <div class="light-mode-background"></div>
-    <div class="dark-mode-background"></div>
+    <div class="dark-mode-background invisible"></div>
+    <div class="christmas-mode-background invisible"></div>
+    <div class="halloween-mode-background invisible"></div>
 
     <!-- Header -->
     <header class="header fixed top-0 w-full flex justify-between items-center px-6 py-4 bg-white dark:bg-gray-900 shadow-md z-50">
@@ -30,19 +187,20 @@
         </a>
 
         <!-- Personalization Dropdown -->
-        <div class="dropdown relative">
-            <button class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-900 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-gray-300 transition">
-                Personalization
-            </button>
-            <div class="dropdown-content absolute right-0 mt-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-md rounded-lg overflow-hidden">
-                <a href="#" id="mode-toggle" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Dark Mode</a>
-            </div>
+        <div class="dropdown">
+        <button>Personalization</button>
+        <div class="dropdown-content">
+            <a href="#" id="dark-mode-toggle">Dark Mode</a>
+            <a href="#" id="halloween-mode-toggle">Halloween Mode</a>
+            <a href="#" id="christmasToggle" class="festive-btn">Christmas Mode</a>
+            <a href="#" id="light-mode-toggle">Light Mode</a>
         </div>
+    </div>
     </header>
 
     <!-- Title -->
     <main class="mt-20 px-6 text-center">
-        <h1 class="text-4xl font-extrabold mb-6 animate-fadeIn">
+        <h1 class="title">
             Meet Our Developers
         </h1>
 
@@ -98,6 +256,103 @@
             document.body.classList.add('dark-mode');
             toggleButton.textContent = 'Light Mode';
         }
+    </script>
+<script src="{% static 'app/js/theme.js' %}"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = {
+            dark: document.getElementById('dark-mode-toggle'),
+            halloween: document.getElementById('halloween-mode-toggle'),
+            christmas: document.getElementById('christmasToggle'),
+            light: document.getElementById('light-mode-toggle'),
+        };
+
+        const applyTheme = (theme) => {
+            const themes = ['light-mode', 'dark-mode', 'halloween-mode', 'christmas-mode'];
+            document.body.classList.remove(...themes);
+            document.body.classList.add(`${theme}-mode`);
+            localStorage.setItem('theme', theme);
+        };
+
+        const removeTemporaryTheme = () => {
+            const themes = ['light-mode', 'dark-mode', 'halloween-mode', 'christmas-mode'];
+            document.body.classList.remove(...themes);
+            const storedTheme = localStorage.getItem('theme') || 'light';
+            document.body.classList.add(`${storedTheme}-mode`);
+        };
+
+        // Apply stored theme on load
+        const storedTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(storedTheme);
+
+        // Add event listeners for hover and click
+        Object.entries(buttons).forEach(([theme, button]) => {
+            if (button) {
+                // Apply the theme on hover
+                button.addEventListener('mouseenter', () => {
+                    document.body.classList.add(`${theme}-mode`);
+                });
+
+                // Revert to stored theme on hover end
+                button.addEventListener('mouseleave', removeTemporaryTheme);
+
+                // Apply the theme permanently on click
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    applyTheme(theme);
+                });
+            }
+        });
+    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const buttons = {
+                dark: document.getElementById('dark-mode-toggle'),
+                halloween: document.getElementById('halloween-mode-toggle'),
+                christmas: document.getElementById('christmasToggle'),
+                light: document.getElementById('light-mode-toggle'),
+            };
+
+            // Function to apply a theme
+            const applyTheme = (theme) => {
+                const themes = ['light-mode', 'dark-mode', 'halloween-mode', 'christmas-mode'];
+                document.body.classList.remove(...themes);
+                document.body.classList.add(`${theme}-mode`);
+                localStorage.setItem('theme', theme); // Save theme to localStorage
+            };
+
+            // Function to remove temporary themes on hover end
+            const removeTemporaryTheme = () => {
+                const themes = ['light-mode', 'dark-mode', 'halloween-mode', 'christmas-mode'];
+                document.body.classList.remove(...themes);
+                const storedTheme = localStorage.getItem('theme') || 'light';
+                document.body.classList.add(`${storedTheme}-mode`);
+            };
+
+            // Apply the stored theme on page load
+            const storedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(storedTheme);
+
+            // Add event listeners for hover and click
+            Object.entries(buttons).forEach(([theme, button]) => {
+                if (button) {
+                    // Apply the theme on hover
+                    button.addEventListener('mouseenter', () => {
+                        document.body.classList.add(`${theme}-mode`);
+                    });
+
+                    // Revert to the stored theme on hover end
+                    button.addEventListener('mouseleave', removeTemporaryTheme);
+
+                    // Apply the theme permanently on click
+                    button.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        applyTheme(theme);
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>

@@ -8,7 +8,7 @@ body {
    padding: 0;
    font-family: 'Poppins', sans-serif;
    color: #2c3e50; /* Dark blue-grey for text */
-   transition: background-color 0.3s, color 0.3s;
+   transition: background-color 0.5s, color 0.5s;
 }
 
 /* Light Mode Background */
@@ -59,20 +59,8 @@ body {
     background-color: #ffffff;
     border-radius: 50%;
     animation: particleMove linear infinite;
-    /* Each particle's individual dimensions and animation settings can be added here */
 }
 
-/* Example particle dimensions and positioning */
-.dark-mode-background .particle:nth-child(1) {
-    width: 3.74px;
-    height: 5.51px;
-    top: 52.72%;
-    left: 88.71%;
-    animation-duration: 4.36s;
-    opacity: 0.76;
-}
-
-/* Add similar CSS for each unique particle element */
 @keyframes particleMove {
     0% { transform: translateY(0); }
     100% { transform: translateY(10px); }
@@ -95,8 +83,6 @@ body.dark-mode .dark-mode-background {
     display: block;
 }
 
-
-
 /* Container Styles */
 .container {
    display: flex;
@@ -111,7 +97,7 @@ body.dark-mode .dark-mode-background {
 h1 {
    font-size: 2.5rem;
    font-weight: bold;
-    margin-top: 100px;
+   margin-top: 100px;
    margin-bottom: 20px;
    color: #2c3e50;
    font-style: italic;
@@ -129,52 +115,6 @@ body.dark-mode h1 {
     justify-content: center;
     gap: 20px;
     padding-top: 20px;
-}
-
-/* Developer Card Styles */
-.developer {
-    width: 250px; /* Fixed width */
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #ffffff;
-    color: #2c3e50;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ccc;
-    text-align: center;
-    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-}
-
-body.dark-mode .developer {
-    background-color: #333333;
-    border-color: #555555;
-    color: #ffffff;
-}
-
-/* Developer Card Heading */
-.developer h3 {
-    font-size: 1.5rem;
-    font-weight: 500;
-    margin: 10px 0;
-}
-
-.developer p {
-    font-size: 1rem;
-    margin: 5px 0;
-}
-
-/* Email Link Styling */
-.developer a {
-    color: #1a73e8;
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-body.dark-mode .developer a {
-    color: #bbdefb;
-}
-
-.developer a:hover {
-    text-decoration: underline;
 }
 
 /* Header */
@@ -196,6 +136,7 @@ body.dark-mode .developer a {
 .dark-mode .header {
     background-color: rgba(18, 18, 18, 0.9);
 }
+
 /* Header Buttons and Dropdown Styling */
 .header a, .dropdown button {
     padding: 10px 15px;
@@ -230,14 +171,17 @@ body.dark-mode .developer a {
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     border-radius: 6px;
     z-index: 1000;
-    text-align: left; /* Ensures text aligns to the left */
-    margin-top: 5px; /* Adds some spacing below the button */
+    text-align: left;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
+/* Dropdown Links */
 .dropdown-content a {
     display: block;
     padding: 12px 16px;
@@ -248,158 +192,167 @@ body.dark-mode .developer a {
     border-bottom: 1px solid #444;
 }
 
-.dropdown button {
-    padding: 10px 15px;
-    background-color: #333;
-    color: #ffffff;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    border: none;
-}
-
 .dropdown-content a:hover {
-    background-color: #eee;
+    background-color: #444;
 }
 
-.dark-mode .dropdown-content {
-    background-color: #333;
-}
-
-.dark-mode .dropdown-content a {
-    color: #ffffff;
-}
-
-.dark-mode .dropdown-content a:hover {
-    background-color: #555;
-}
-
-/* Ensure consistent spacing */
 .dropdown-content a:last-child {
     border-bottom: none;
 }
-/* Ensure content starts below the header */
-.content {
-    margin-top: 80px; /* Adjust based on header height */
-    text-align: center;
-}
 
-/* Heading Styles */
-h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 20px;
+/* Light Mode */
+body.light-mode {
+    background: linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+                linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+    background-color: #ffffff;
     color: #2c3e50;
-    font-style: italic;
-    transition: color 0.3s;
 }
 
-body.dark-mode h1 {
+/* Dark Mode */
+body.dark-mode {
+    background: radial-gradient(25% 25% at 10% 10%, #ffffff 0%, #ffffff 40%, #1a1a1a 100%);
+    background-color: #1a1a1a;
     color: #ffffff;
 }
 
-
-/* Logout Link and Dropdown Button */
-.logout, .dropdown button {
-    padding: 10px 15px;
-    background-color: #333;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    text-decoration: none;
+body.halloween-mode {
+    background: url('/static/app/images/spiderweb.jpeg') no-repeat center center fixed;
+    background-color: #FF8200 !important; /* Light orange background */
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.logout:hover, .dropdown button:hover {
-    background-color: #555;
+/* Christmas Mode with higher specificity */
+body.christmas-mode {
+    background: url('/static/app/images/christmas.png') no-repeat center center fixed;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.dark-mode .logout, .dark-mode .dropdown button {
-    background-color: #ffffff;
-    color: #333;
+
+body.christmas-mode h1,
+body.christmas-mode h2 {
+    color: #ff4040; /* Festive red for titles */
 }
 
-.dark-mode .logout:hover, .dark-mode .dropdown button:hover {
-    background-color: #ddd;
+body.christmas-mode h1::after,
+body.christmas-mode h2::after {
+    content: " 🎄"; /* Christmas tree emoji */
 }
 
-/* Dropdown Menu */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    background-color: #ffffff;
-    min-width: 150px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 6px;
-    overflow: hidden;
-    z-index: 1;
-    transition: background-color 0.3s;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown-content a {
-    display: block;
-    padding: 10px 15px;
-    color: #333;
-    text-decoration: none;
-    font-weight: bold;
-    background-color: #f9f9f9;
-    transition: background-color 0.3s;
-}
-
-.dropdown-content a:hover {
-    background-color: #eee;
-}
-
-.dark-mode .dropdown-content {
-    background-color: #333;
-}
-
-.dark-mode .dropdown-content a {
-    color: #ffffff;
-}
-
-.dark-mode .dropdown-content a:hover {
-    background-color: #555;
-}
-
-/* Button Styles */
-.contact-devs, .dark-mode-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: transparent;
-    color: #333;
-    text-decoration: none;
-    font-size: 16px;
-    padding: 8px;
-    cursor: pointer;
-    transition: color 0.3s;
-}
-
-.dark-mode-toggle {
-    top: 60px; /* Position it below the "Contact Developers" button */
-}
-
-.contact-devs:hover, .dark-mode-toggle:hover {
-    text-decoration: underline;
-}
-
-.dark-mode .contact-devs,
-.dark-mode .dark-mode-toggle {
+body.christmas-mode .spotify-login {
+    background-color: #ff4040; /* Red buttons */
     color: #fff;
+    border: none;
 }
 
+.invisible {
+    display: none;
+}
+
+body.christmas-mode .christmas-mode-background {
+    display: block;
+}
+body.christmas-mode .spotify-login:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+}
+
+body.christmas-mode .header a,
+body.christmas-mode .dropdown button {
+    background-color: #ff4040; /* Red for header buttons */
+    color: #fff;
+    border: none;
+}
+
+body.christmas-mode .header a:hover,
+body.christmas-mode .dropdown button:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+}
+
+body.christmas-mode .light-mode-background,
+body.christmas-mode .dark-mode-background {
+    display: none !important;
+}
+
+body.halloween-mode .light-mode-background,
+body.halloween-mode .dark-mode-background,
+body.halloween-mode .christmas-mode-background {
+    display: none !important;
+}
+
+.christmas-mode-background {
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    width: 100vw;
+    height: 100vh;
+    background-attachment: fixed; /* Fix the background in place */
+}
+
+body.christmas-mode .header {
+    background-color: #a8e4a0; /* Light green */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.christmas-mode-background {
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    width: 100vw;
+    height: 100vh;
+    background: url('/static/app/images/christmas.png') no-repeat center center fixed;
+    background-size: cover; /* Ensures the image covers the entire background */
+}
+
+/* Halloween mode background */
+.halloween-mode-background {
+    position: fixed;
+    inset: 0;
+    z-index: -10;
+    width: 100vw;
+    height: 100vh;
+    background-attachment: fixed; /* Fix the background in place */
+    background-color: #FCC981; /* Light orange background */
+    background-image: linear-gradient(to right, #000000 1px, transparent 1px),
+                      linear-gradient(to bottom, #000000 1px, transparent 1px);
+    background-size: 6rem 6rem;
+    display: block; /* Ensure visibility */
+}
+
+body.halloween-mode .header {
+    background-color: #000000; /* Black header */
+    color: #ffffff; /* White text */
+}
+
+body.halloween-mode .header a,
+body.halloween-mode .dropdown button {
+    background-color: #ffffff; /* White background */
+    color: #000000; /* Black text */
+    border: 1px solid #000000; /* Black border */
+}
+
+body.halloween-mode .header a:hover,
+body.halloween-mode .dropdown button:hover {
+    background-color: #696969; /* Light gray for hover effect */
+}
+
+body.halloween-mode h1.title {
+    color: white; /* Pumpkin orange for the title */
+}
+
+body.halloween-mode h1.title::after {
+    content: " 🎃"; /* Add Jack-o-lantern emoji */
+}
+
+body.halloween-mode .spotify-login {
+    background-color: #ffffff; /* White button */
+    color: #000000; /* Black text */
+    border: 1px solid #000000; /* Black border */
+}
+
+body.halloween-mode .halloween-mode-background {
+    display: block !important; /* Ensure it's displayed in Halloween mode */
+}
+
+/* Hover Effects */
+.dropdown-content a:hover {
+    background-color: #444;
+}
