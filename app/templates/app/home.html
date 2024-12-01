@@ -218,15 +218,20 @@
     <!-- Page Content -->
     <h1>Welcome to Your Spotify Wrapped Home</h1>
 
-    <!-- Green Buttons for View Wrapped Pages -->
-    <a href="{% url 'slides' %}" class="special-button">Get Your Spotify Wrapped</a>
-    <br>
-    <a href="{% url 'view_wrapped' %}" class="button">View Past Spotify Wrapped</a>
-    <br>
-    <a href="{% url 'holiday_wrapped' %}" class="button">View Holiday Wrapped</a>
-    <br>
-    <a href="{% url 'logout' %}" class="button">Logout</a> <!-- Logout link -->
-
+    <div>
+        {% if user.is_authenticated %}
+            <!-- Links for Logged-In Users -->
+            <a href="{% url 'slides' %}" class="special-button">Get Your Spotify Wrapped</a>
+            <a href="{% url 'view_wrapped' %}" class="button">View Past Spotify Wrapped</a>
+            <a href="{% url 'holiday_wrapped' %}" class="button">View Holiday Wrapped</a>
+            <a href="{% url 'logout' %}" class="button">Logout</a>
+        {% else %}
+            <!-- Links for Non-Logged-In Users -->
+            <a href="{% url 'register' %}" class="button">Register</a>
+            <a href="{% url 'user_login' %}" class="button">Login</a>
+            <a href="{% url 'spotify_login' %}" class="button">Login with Spotify</a>
+        {% endif %}
+    </div>
     <script>
         // Function to apply the current theme mode
         function applyTheme(isDarkMode) {
