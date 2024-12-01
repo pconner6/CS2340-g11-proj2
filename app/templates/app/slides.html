@@ -30,16 +30,23 @@
                 <h1 class="title">Your Top</h1>
                 <h1 class="title">Artists</h1>
               </div>
-              <div class="column"><img src="https://mverissimo.github.io/tweenslideshow/dist/assets/images/astronaut.png" class="image astronaut"></div>
+              <div class="column">
+                {% for artist in top_artists %}
+                <h1 class="data"> {{forloop.counter}}: {{ artist.name }}</h1>
+                {% endfor %}
+              </div>
             </div>
           </div>
           <div class="slider__item slide-genres">
             <div class="slider__content grid">
               <div class="column">
-                <h1 class="title">Whats the</h1>
+                <h1 class="title">What's the</h1>
                 <h1 class="title">Vibe?</h1>
               </div>
-              <div class="column"><img src="https://mverissimo.github.io/tweenslideshow/dist/assets/images/cup-2.png" class="image cup"></div>
+              <div class="column">
+                <h1 class="data">Your top genre was:</h1>
+                <h1 class="data">{{ genre }}</h1>
+              </div>
             </div>
             
           </div>
@@ -49,7 +56,10 @@
                 <h1 class="title">Who else</h1>
                 <h1 class="title">is listening?</h1>
               </div>
-              <div class="column"><img src="https://mverissimo.github.io/tweenslideshow/dist/assets/images/burger.png" class="image burger"></div>
+              <div class="column">
+                <h1 class="title">{{ average_popularity }}%</h1>
+                <h1 class="data">  {{ average_message }}</h1>
+              </div>
             </div>
           </div>
           <div class="slider__item slide-tracks">
@@ -58,17 +68,21 @@
                 <h1 class="title">Some of your</h1>
                 <h1 class="title">favorites</h1>
               </div>
-              <div class="column"><img src="https://mverissimo.github.io/tweenslideshow/dist/assets/images/astronaut.png" class="image astronaut"></div>
+              <div class="column">
+                {% for track in top_tracks %}
+                <h1 class="data">  {{ track.name }}</h1>
+                {% endfor %}
+              </div>
             </div>
           </div>
           <div class="slider__item slide-transition">
             <div class="slider__content grid">
               <div class="column">
                 <h1 class="title">The one song</h1>
-                <h1 class="title">You couldn't get enough of</h1>
+                <h2 class="title">You couldn't get enough of</h2>
                 <h1 class="title">. . .</h1>
               </div>
-              <div class="column"><img src="https://mverissimo.github.io/tweenslideshow/dist/assets/images/cup-2.png" class="image cup"></div>
+              <div class="column"></div>
             </div>
             
           </div>
@@ -76,8 +90,9 @@
             <div class="slider__content grid">
               <div class="column">
                 <h1 class="title">The MVP</h1>
+                <h2 class="data">{{ top_song.name }} - {{ track_artist.name }}</h2>
               </div>
-              <div class="column"><img src="https://mverissimo.github.io/tweenslideshow/dist/assets/images/burger.png" class="image burger"></div>
+              <div class="column"><img src="{{image_url}}" class="image song"></div>
             </div>
           </div>
           <div class="slider__item slide-closer">
@@ -86,7 +101,7 @@
                 <h1 class="title">Thats a Wrap!</h1>
                 <h1 class="title">Thanks for stopping by :)</h1>
               </div>
-              <div class="column"><img src="https://mverissimo.github.io/tweenslideshow/dist/assets/images/astronaut.png" class="image astronaut"></div>
+              <div class="column"></div>
             </div>
           </div>
       </div>
@@ -282,13 +297,13 @@ var slider = new TuinSlider("#slider",{
           , r = o[e]
           , a = r.querySelectorAll(".title")
           , i1 = r.querySelector(".eyes")
-          , y1 = r.querySelector(".astronaut")
-          , c1 = r.querySelectorAll(".cup")
-          , i2 = r.querySelector(".burger")
-          , y2 = r.querySelector(".astronaut")
-          , c2 = r.querySelectorAll(".cup")
-          , i3 = r.querySelector(".burger")
-          , y3 = r.querySelector(".astronaut");
+          , y1 = r.querySelector(".data")
+          , c1 = r.querySelectorAll(".data")
+          , i2 = r.querySelector(".title")
+          , y2 = r.querySelector(".data")
+          , c2 = r.querySelectorAll(".data")
+          , i3 = r.querySelector(".song")
+          , y3 = r.querySelector(".data");
         return 0 === e && t.staggerTo(a, .8, {
             y: -100,
             opacity: 0,
@@ -368,13 +383,13 @@ var slider = new TuinSlider("#slider",{
             visibility: "visible"
         });
         var y1 = r.querySelector(".eyes")
-          , c1 = r.querySelector(".astronaut")
-          , l1 = r.querySelectorAll(".cup")
-          , y2 = r.querySelector(".burger")
-          , c2 = r.querySelector(".astronaut")
-          , l2 = r.querySelectorAll(".cup")
-          , y3 = r.querySelector(".burger")
-          , c3 = r.querySelector(".astronaut");
+          , c1 = r.querySelector(".data")
+          , l1 = r.querySelectorAll(".data")
+          , y2 = r.querySelector(".title")
+          , c2 = r.querySelector(".data")
+          , l2 = r.querySelectorAll(".data")
+          , y3 = r.querySelector(".song")
+          , c3 = r.querySelector(".data");
         return 0 === e && t.staggerFromTo(a, 1, {
             y: 100,
             opacity: 0

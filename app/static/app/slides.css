@@ -161,6 +161,11 @@ img {
   color: #FFF;
   text-transform: uppercase; }
 
+.data {
+  font-size: 30px;
+  font-weight: 100;
+  color: #FFF; }
+
 @media only screen and (min-width: 768px) {
   .title {
     font-size: 7em; } 
