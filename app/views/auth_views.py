@@ -196,8 +196,8 @@ def devs(request):
         },
         {
             'name': 'Paul Conner',
-            'email': 'gt email here',
-            'about' : 'Paul is _____'
+            'email': 'pconner6@gatech.edu',
+            'about' : 'Paul is a second year Computer Science major at Georgia Tech with interests in devices and intelligence'
         },
         {
             'name': 'Faris Fakhouri',
