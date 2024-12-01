@@ -9,6 +9,9 @@ from datetime import datetime
 def landing_page(request):
     return render(request, 'app/landing.html')  # A template called landing.html
 
+def slides(request):
+    return render(request, 'app/slides.html')
+
 # Spotify Login
 def spotify_login(request):
     auth_url = (
@@ -88,7 +91,7 @@ def view_wrapped(request):
         })
     else:
         return render(request, 'app/wrapped.html', {
-            'error': 'Failed to retrieve data from Spotify.',
+            'error': top_tracks_response.status_code,
         })
 
 
