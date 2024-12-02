@@ -318,7 +318,7 @@ body.christmas-mode .header {
 }
 
 body.halloween-mode .header {
-    background-color: #000000; /* Black header */
+    background-color: darkorange; /* Black header */
     color: #ffffff; /* White text */
 }
 

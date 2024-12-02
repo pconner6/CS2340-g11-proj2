@@ -1,10 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'app/homepage.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -62,9 +64,40 @@
             text-align: center;
             margin-top: 1rem;
         }
+
+        /* Override dark mode styles for the form-container */
+        body.dark-mode .form-container {
+            color: #000; /* Force text inside the form-container to remain black in dark mode */
+            background-color: #fff; /* Ensure background remains white for readability */
+        }
+
+        /* Ensure header inside form-container remains black in dark mode */
+        body.dark-mode .form-container h1 {
+            color: #000; /* Black text for headers */
+        }
     </style>
 </head>
 <body>
+<!-- Background Divs -->
+    <div class="light-mode-background"></div>
+    <div class="dark-mode-background invisible"></div>
+    <div class="christmas-mode-background invisible"></div>
+    <div class="halloween-mode-background invisible"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="{% url 'devs' %}" class="contact-us">Contact Us</a>
+        <!-- Personalization Dropdown -->
+        <div class="dropdown">
+        <button>Personalization</button>
+        <div class="dropdown-content">
+            <a href="#" id="dark-mode-toggle">Dark Mode</a>
+            <a href="#" id="halloween-mode-toggle">Halloween Mode</a>
+            <a href="#" id="christmasToggle" class="festive-btn">Christmas Mode</a>
+            <a href="#" id="light-mode-toggle">Light Mode</a>
+        </div>
+    </div>
+    </header>
     <div class="form-container">
         <h1>Log In to Your Account</h1>
         <form method="POST">
@@ -74,5 +107,102 @@
         </form>
         <p>Don't have an account? <a href="{% url 'register' %}" class="text-blue-500">Register</a></p>
     </div>
+<script src="{% static 'app/js/theme.js' %}"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = {
+            dark: document.getElementById('dark-mode-toggle'),
+            halloween: document.getElementById('halloween-mode-toggle'),
+            christmas: document.getElementById('christmasToggle'),
+            light: document.getElementById('light-mode-toggle'),
+        };
+
+        const applyTheme = (theme) => {
+            const themes = ['light-mode', 'dark-mode', 'halloween-mode', 'christmas-mode'];
+            document.body.classList.remove(...themes);
+            document.body.classList.add(`${theme}-mode`);
+            localStorage.setItem('theme', theme);
+        };
+
+        const removeTemporaryTheme = () => {
+            const themes = ['light-mode', 'dark-mode', 'halloween-mode', 'christmas-mode'];
+            document.body.classList.remove(...themes);
+            const storedTheme = localStorage.getItem('theme') || 'light';
+            document.body.classList.add(`${storedTheme}-mode`);
+        };
+
+        // Apply stored theme on load
+        const storedTheme = localStorage.getItem('theme') || 'light';
+        applyTheme(storedTheme);
+
+        // Add event listeners for hover and click
+        Object.entries(buttons).forEach(([theme, button]) => {
+            if (button) {
+                // Apply the theme on hover
+                button.addEventListener('mouseenter', () => {
+                    document.body.classList.add(`${theme}-mode`);
+                });
+
+                // Revert to stored theme on hover end
+                button.addEventListener('mouseleave', removeTemporaryTheme);
+
+                // Apply the theme permanently on click
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    applyTheme(theme);
+                });
+            }
+        });
+    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const buttons = {
+                dark: document.getElementById('dark-mode-toggle'),
+                halloween: document.getElementById('halloween-mode-toggle'),
+                christmas: document.getElementById('christmasToggle'),
+                light: document.getElementById('light-mode-toggle'),
+            };
+
+            // Function to apply a theme
+            const applyTheme = (theme) => {
+                const themes = ['light-mode', 'dark-mode', 'halloween-mode', 'christmas-mode'];
+                document.body.classList.remove(...themes);
+                document.body.classList.add(`${theme}-mode`);
+                localStorage.setItem('theme', theme); // Save theme to localStorage
+            };
+
+            // Function to remove temporary themes on hover end
+            const removeTemporaryTheme = () => {
+                const themes = ['light-mode', 'dark-mode', 'halloween-mode', 'christmas-mode'];
+                document.body.classList.remove(...themes);
+                const storedTheme = localStorage.getItem('theme') || 'light';
+                document.body.classList.add(`${storedTheme}-mode`);
+            };
+
+            // Apply the stored theme on page load
+            const storedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(storedTheme);
+
+            // Add event listeners for hover and click
+            Object.entries(buttons).forEach(([theme, button]) => {
+                if (button) {
+                    // Apply the theme on hover
+                    button.addEventListener('mouseenter', () => {
+                        document.body.classList.add(`${theme}-mode`);
+                    });
+
+                    // Revert to the stored theme on hover end
+                    button.addEventListener('mouseleave', removeTemporaryTheme);
+
+                    // Apply the theme permanently on click
+                    button.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        applyTheme(theme);
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
