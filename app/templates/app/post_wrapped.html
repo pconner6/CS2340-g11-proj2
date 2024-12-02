@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post Your Spotify Wrapped</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'app/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Post Your Spotify Wrapped</h1>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% else %}
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="button">Post Wrapped</button>
+            </form>
+            <h2>Your Top Tracks</h2>
+            <ul>
+                {% for track in wrapped_data.top_tracks %}
+                    <li>{{ track.name }} by {{ track.artist }}</li>
+                {% endfor %}
+            </ul>
+            <h2>Your Top Artists</h2>
+            <ul>
+                {% for artist in wrapped_data.top_artists %}
+                    <li>{{ artist.name }} - Genres: {{ artist.genres|join:", " }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</body>
+</html>

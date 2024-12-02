@@ -1,12 +1,19 @@
 import requests
 import base64
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from django.utils import timezone
 from datetime import datetime
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from ..models import Wrapped, User
-from ..forms import RegisterForm, LoginForm
+from ..forms import RegisterForm, LoginForm, WrappedForm
+import urllib.parse
+from django.http import JsonResponse
+import json
+
+
 
 # Landing Page
 def landing_page(request):
@@ -82,6 +89,8 @@ def spotify_login(request):
         "&scope=user-top-read"
     )
     return redirect(auth_url)
+
+
 def spotify_callback(request):
     
     
@@ -116,9 +125,22 @@ def spotify_callback(request):
 
         spotify_id = user_info.get('id')
         email = user_info.get('email')
+        images = user_info.get('images', [])
+        if images:
+            avatar_url = images[0]['url']
+        else:
+            avatar_url = None
+            
+        
+        
 
         # Step 3: Link Spotify account to a User instance
         user, created = User.get_or_create_by_spotify_id(spotify_id=spotify_id, email=email)
+        
+        if avatar_url:
+            user.avatar_url = avatar_url
+            user.save()
+            
         login(request, user)  # Log in the user
 
         # Store the access token in the session for future Spotify API requests
@@ -146,14 +168,29 @@ def view_wrapped(request):
     headers = {
         'Authorization': f'Bearer {access_token}'
     }
+    
+    # Extract the selected time range from the GET request
+    
+    time_range = request.GET.get('time_range', 'medium_term').strip()
 
     # Fetch top tracks
-    top_tracks_url = 'https://api.spotify.com/v1/me/top/tracks?limit=10'
+    #time_range={time_range}&
+    
+    #print (time_range)
+    
+    #print(top_tracks_response.json())
+    
+    params = {'limit': 10, 'time_range': time_range}
+    top_tracks_url = f"https://api.spotify.com/v1/me/top/tracks?{urllib.parse.urlencode(params)}"
+    
+    #top_tracks_url = 'https://api.spotify.com/v1/me/top/tracks?limit=10&'
     top_tracks_response = requests.get(top_tracks_url, headers=headers)
+ 
 
     # Fetch top artists
-    top_artists_url = 'https://api.spotify.com/v1/me/top/artists?limit=10'
+    top_artists_url = f"https://api.spotify.com/v1/me/top/artists?{urllib.parse.urlencode(params)}"
     top_artists_response = requests.get(top_artists_url, headers=headers)
+    print(top_tracks_response.json())
     
     if top_tracks_response.status_code == 200 and top_artists_response.status_code == 200:
         top_tracks = top_tracks_response.json().get('items', [])
@@ -161,10 +198,14 @@ def view_wrapped(request):
         return render(request, 'app/wrapped.html', {
             'top_tracks': top_tracks,
             'top_artists': top_artists,
+            'selected_time_range' : time_range,
         })
     else:
         return render(request, 'app/wrapped.html', {
             'error': top_tracks_response.status_code,
+            'error_contents': f"Error fetching top tracks: {top_tracks_response.json()}",
+            'selected_time_range' : time_range,
+            
         })
 
 
@@ -275,3 +316,108 @@ def delete_account(request):
         request.user.delete()
         logout(request)
     return redirect('landing_page')
+
+
+
+
+@login_required
+def view_public_wrapped(request):
+    
+    filter_param = request.GET.get('filter', '').strip()
+    if filter_param == 'liked':
+        public_wrapped = Wrapped.objects.filter(public=True, likes=request.user).order_by('-created_at')
+    else:
+        public_wrapped = Wrapped.objects.filter(public=True).order_by('-created_at')
+    
+    
+    # I want the cards to be colorful so I am going to define a list of nice random colors to choose from
+    colors = [
+        "#f2aab4",  # light pink
+        "#eafacf",  # cream 
+        "#e6ce9a",  # dark cream
+        "#9ae6e6",  # cyan
+        "#53b2ed",  # sky blue
+        "#b47ff5",  # light purple
+        "#b4fabe",  # mint
+        "#faa0aa",  # rose
+    ]
+    
+    return render(request, 'app/public_wrapped.html', {'public_wrapped': public_wrapped, 'colors': colors, 'filter':filter_param})
+
+
+@login_required
+def post_wrapped(request):
+    if 'spotify_token' not in request.session:
+        return redirect('spotify_login')  # Redirect to Spotify login if not authenticated
+
+    access_token = request.session['spotify_token']
+    headers = {
+        'Authorization': f'Bearer {access_token}'
+    }
+
+    # Fetch top tracks and artists (as done in view_wrapped)
+    top_tracks_url = 'https://api.spotify.com/v1/me/top/tracks?limit=10'
+    top_artists_url = 'https://api.spotify.com/v1/me/top/artists?limit=10'
+    top_tracks_response = requests.get(top_tracks_url, headers=headers)
+    top_artists_response = requests.get(top_artists_url, headers=headers)
+
+    if top_tracks_response.status_code == 200 and top_artists_response.status_code == 200:
+        top_tracks = top_tracks_response.json().get('items', [])
+        top_artists = top_artists_response.json().get('items', [])
+        
+        # Prepare the data to be saved
+        wrapped_data = {
+            'top_tracks': [{'name': track['name'], 'artist': track['artists'][0]['name']} for track in top_tracks],
+            'top_artists': [{'name': artist['name'], 'genres': artist['genres']} for artist in top_artists],
+            #'created_at': timezone.now(), Json can't serialize this so it causes problems. Will have to make it into string if necessary.
+        }
+
+        if request.method == 'POST':
+            form = WrappedForm(request.POST)
+            if form.is_valid():
+                wrapped = form.save(commit=False)
+                wrapped.user = request.user
+                wrapped.data = wrapped_data  # Assign the prepared data
+                wrapped.save()
+                return redirect('view_public_wrapped')  # Redirect to public wraps page
+        else:
+            form = WrappedForm(initial={'data': wrapped_data})
+
+        return render(request, 'app/post_wrapped.html', {'form': form, 'wrapped_data': wrapped_data})
+    else:
+        return render(request, 'app/post_wrapped.html', {'error': 'Failed to retrieve data from Spotify.'})
+    
+    
+@login_required
+@require_POST
+def like_wrapped(request):
+    try:
+        data = json.loads(request.body)
+        wrapped_id = data.get('wrapped_id')
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+    if not wrapped_id:
+        return JsonResponse({'error': 'No wrapped_id provided'}, status=400)
+
+    wrapped = get_object_or_404(Wrapped, id=wrapped_id, public=True)
+    user = request.user
+
+    if wrapped.likes.filter(id=user.id).exists():
+        wrapped.likes.remove(user)
+        liked = False
+    else:
+        wrapped.likes.add(user)
+        liked = True
+
+    # Return JSON-serializable data only
+    return JsonResponse({
+        'liked': liked,
+        'like_count': wrapped.like_count
+    })
+
+
+
+
+
+

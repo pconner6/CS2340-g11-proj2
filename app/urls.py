@@ -16,4 +16,7 @@ urlpatterns = [
     path('user-login/', auth_views.login_view, name='user_login'),
     path('manage_wrapped/', auth_views.manage_wrapped, name='manage_wrapped'),
     path('delete_account/', auth_views.delete_account, name='delete_account'),
+    path('post-wrapped/', auth_views.post_wrapped, name='post_wrapped'),
+    path('public-wrapped/', auth_views.view_public_wrapped, name='view_public_wrapped'),
+    path('like-wrapped/', auth_views.like_wrapped, name='like_wrapped'),
 ]
