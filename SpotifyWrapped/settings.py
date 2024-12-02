@@ -25,7 +25,7 @@ SECRET_KEY = credentials.SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['faris-school-work.tail63ecc.ts.net', '127.0.0.1']
 
 
 # Application definition
