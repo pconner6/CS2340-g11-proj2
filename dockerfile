@@ -17,8 +17,10 @@ RUN pip install -r requirements.txt
 # Copy application files
 COPY . .
 
+RUN python3 manage.py migrate
+
 # Ensure manage.py exists in /app
 RUN if [ ! -f "/app/manage.py" ]; then echo "Error: manage.py not found"; exit 1; fi
 
 # Set the entry point
-ENTRYPOINT ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT ["python3", "manage.py", "runserver"]
