@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Public Spotify Wrappeds</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'app/style.css' %}">
+    <style>
+        /* Additional custom styles */
+        .wrapped-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .like-button {
+            font-size: 1.5rem;
+            color: #1DB954; /* Spotify Green */
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .like-button.liked {
+            color: #14833b; /* Darker Green for liked state */
+        }
+        /* Sub-card hover effect */
+        .sub-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Light/Dark Mode Backgrounds -->
+    <div class="light-mode-background"></div>
+    <div class="dark-mode-background"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <a href="{% url 'devs' %}" class="contact-devs">Contact Us</a>
+        <div class="dropdown">
+            <button class="dark-mode-toggle">Dark Mode</button>
+            <div class="dropdown-content">
+                <a href="#" id="mode-toggle" class="dark-mode-toggle">Toggle Theme</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto p-6 mt-20">
+        <h1 class="text-4xl font-bold text-center mb-8">Public Spotify Wrappeds</h1>
+        
+
+        <div class="text-center mb-4">
+            <a href="{% url 'view_public_wrapped' %}" class="px-4 py-2 rounded-lg 
+                {% if filter != 'liked' %}bg-blue-500 text-white{% else %}bg-gray-200 text-gray-600{% endif %}">
+                All Wrappeds
+            </a>
+            <a href="{% url 'view_public_wrapped' %}?filter=liked" class="px-4 py-2 rounded-lg 
+                {% if filter == 'liked' %}bg-blue-500 text-white{% else %}bg-gray-200 text-gray-600{% endif %}">
+                Liked Wrappeds
+            </a>
+        </div>
+        
+        {% if public_wrapped %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for wrapped in public_wrapped %}
+                    <div class="wrapped-card bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-transform duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <!-- Placeholder for User Avatar -->
+                                <img src="{{ wrapped.user.avatar_url|default:'https://via.placeholder.com/50' }}" alt="{{ wrapped.user.username }}'s Avatar" class="w-12 h-12 rounded-full mr-4">
+                                <div>
+                                    <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ wrapped.user.username }}</h2>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ wrapped.created_at|date:"F d, Y" }}</p>
+                                </div>
+                            </div>
+                            <!-- Like Button -->
+                            <div>
+                                <span class="like-button {% if user in wrapped.likes.all %}liked{% endif %}" onclick="toggleLike({{ wrapped.id }})">
+                                    {% if user in wrapped.likes.all %}
+                                        &#10084; <!-- Filled Heart -->
+                                    {% else %}
+                                        &#9825; <!-- Empty Heart -->
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Top Tracks -->
+                        <div class="mb-4">
+                            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300">Top Tracks</h3>
+                            <ul class="mt-2 space-y-2">
+                                {% for track in wrapped.data.top_tracks %}
+                                {% with random_color=colors|random %}
+                                <li class="sub-card p-3 rounded-lg transition-transform duration-300"
+                                style="background-color: {{ random_color }};">
+                                        <strong>{{ track.name }}</strong> by {{ track.artist }}
+                                        <br>
+                                        <span class="italic text-sm text-gray-600 dark:text-gray-400">Album: {{ track.album.name }}</span>
+                                    </li>
+                                    {% endwith %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <!-- Top Artists -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300">Top Artists</h3>
+                            <ul class="mt-2 space-y-2">
+                                {% for artist in wrapped.data.top_artists %}
+                                {% with random_color=colors|random %}
+                                <li class="sub-card p-3 rounded-lg transition-transform duration-300"
+                                style="background-color: {{ random_color }};">
+                                <strong>{{ artist.name }}</strong>
+                                <br>
+                                <span class="text-sm text-gray-600 dark:text-gray-400">Genres: {{ artist.genres|join:", " }}</span>
+                            </li>
+                                    {% endwith %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <!-- Like Count -->
+                        <div class="mt-4">
+                            <span class="text-sm text-gray-500 dark:text-gray-400">Likes: <span id="like-count-{{ wrapped.id }}">{{ wrapped.like_count }}</span></span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center text-gray-600 dark:text-gray-400">No public Wrappeds available at the moment.</p>
+        {% endif %}
+
+        <!-- Back to Home Link -->
+        <div class="mt-8 text-center">
+            <a href="{% url 'home' %}" class="text-blue-500 hover:text-blue-700">Back to Home</a>
+        </div>
+    </div>
+
+    <!-- Carousel at the Bottom -->
+    <div class="carousel-wrapper">
+        <div class="carousel">
+            <img src="{% static 'app/images/img1.jpeg' %}" alt="Image 1">
+            <img src="{% static 'app/images/image2.png' %}" alt="Image 2">
+            <img src="{% static 'app/images/image3.png' %}" alt="Image 3">
+            <img src="{% static 'app/images/image4.png' %}" alt="Image 4">
+            <!-- Duplicate the images for seamless looping -->
+            <img src="{% static 'app/images/img1.jpeg' %}" alt="Image 1">
+            <img src="{% static 'app/images/image2.png' %}" alt="Image 2">
+            <img src="{% static 'app/images/image3.png' %}" alt="Image 3">
+            <img src="{% static 'app/images/image4.png' %}" alt="Image 4">
+        </div>
+    </div>
+
+    <script>
+        // Function to get CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                let cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    let cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Theme Toggle Script
+        function applyTheme(isDarkMode) {
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Retrieve and apply stored theme
+        const storedTheme = localStorage.getItem('theme');
+        const isDarkMode = storedTheme === 'dark';
+        applyTheme(isDarkMode);
+
+        // Toggle theme on button click
+        const toggleButton = document.getElementById('mode-toggle');
+        toggleButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            const currentMode = document.body.classList.contains('dark-mode');
+            applyTheme(!currentMode);
+        });
+
+        // Function to handle likes using Fetch API
+        function toggleLike(wrappedId) {
+            const csrftoken = getCookie('csrftoken');
+            fetch("{% url 'like_wrapped' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({'wrapped_id': wrappedId})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.error){
+                    console.error(data.error);
+                    alert('Error: ' + data.error);
+                    return;
+                }
+                // Update like count
+                document.getElementById(`like-count-${wrappedId}`).textContent = data.like_count;
+                
+                // Toggle heart icon
+                const likeButton = document.querySelector(`.like-button[onclick="toggleLike(${wrappedId})"]`);
+                if (data.liked) {
+                    likeButton.innerHTML = '&#10084;'; // Filled Heart
+                    likeButton.classList.add('liked');
+                } else {
+                    likeButton.innerHTML = '&#9825;'; // Empty Heart
+                    likeButton.classList.remove('liked');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while processing your request.');
+            });
+        }
+    </script>
+</body>
+</html>

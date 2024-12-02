@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import os
+
 from pathlib import Path
 from . import credentials
 
@@ -25,7 +27,7 @@ SECRET_KEY = credentials.SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['faris-school-work.tail63ecc.ts.net', '127.0.0.1', 'https://faris-school-work.tail63ecc.ts.net']
 
 STATIC_URL = '/static/'
 
@@ -33,7 +35,14 @@ STATICFILES_DIRS = [
     BASE_DIR / "app/static",
 ]
 
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://faris-school-work.tail63ecc.ts.net",
+    "http://127.0.0.1",
+]
+
 
 # Application definition
 
@@ -113,7 +122,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 SPOTIFY_CLIENT_ID = credentials.SPOTIFY_CLIENT_ID
 SPOTIFY_CLIENT_SECRET = credentials.SPOTIFY_CLIENT_SECRET
-SPOTIFY_REDIRECT_URI = credentials.SPOTIFY_REDIRECT_URI
+
+if os.getenv('PRODUCTION', 'false').lower() == 'true':
+    SPOTIFY_REDIRECT_URI = credentials.SPOTIFY_REDIRECT_URI_PROD
+else:
+    SPOTIFY_REDIRECT_URI = credentials.SPOTIFY_REDIRECT_URI_DEV
 
 LANGUAGE_CODE = 'en-us'
 

@@ -1,0 +1,25 @@
+# Usage
+#   Start:          docker compose up -d --force-recreate
+#   With helpers:   docker compose -f docker-compose.yml up -d --force-recreate
+#   Stop:           docker compose down
+#   Destroy:        docker compose -f docker-compose.yml down -d -v --remove-orphans
+#   Build/Rebuild:  docker compose -f docker-compose.yml up -d --force-recreate --build
+
+name: cs2340
+services:
+  cs2340:
+    container_name: cs2340
+    build:
+      context: .
+    restart: unless-stopped
+    ports:
+     - 2001:8000
+    environment:
+      - PRODUCTION=true
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    driver: bridge
+    external: true
