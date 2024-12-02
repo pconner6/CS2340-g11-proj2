@@ -20,7 +20,64 @@ def landing_page(request):
     return render(request, 'app/landing.html')  # A template called landing.html
 
 def slides(request):
-    return render(request, 'app/slides.html')
+    if 'spotify_token' not in request.session:
+        return redirect('spotify_login')  # Redirect to login if not authenticated
+
+    access_token = request.session['spotify_token']
+    headers = {
+        'Authorization': f'Bearer {access_token}'
+    }
+
+    # Fetch top tracks
+    top_tracks_url = 'https://api.spotify.com/v1/me/top/tracks?limit=10'
+    top_tracks_response = requests.get(top_tracks_url, headers=headers)
+
+    # Fetch top artists
+    top_artists_url = 'https://api.spotify.com/v1/me/top/artists?limit=10'
+    top_artists_response = requests.get(top_artists_url, headers=headers)
+    
+    if top_tracks_response.status_code == 200 and top_artists_response.status_code == 200:
+        top_tracks = top_tracks_response.json().get('items', []) #Top Tracks
+        top_artists = top_artists_response.json().get('items', []) #Top Artist
+        # Popularity score (based on artists)
+        average = 0 
+        for artists in top_artists:
+            average += artists.get('popularity', 0)
+        average = average/10
+        average_message = ""
+        if average > 66:
+            average_message = "You must be in on all the trends!"
+        elif average <= 66 and average > 33:
+            average_message = "Perfectly balanced, as all things should be."
+        else:
+            average_message = "Secret trendsetter?"
+        # Genres (based on artist)
+        genre = top_artists[0].get('genres', [])
+        
+        track = top_tracks[0]
+        track_artists = track.get('artists', [])
+        images = track.get("album", {}).get("images", [])
+        if images:
+            image_url = images[0]["url"]  # Return the largest image
+        else:
+            image_url = None
+
+        return render(request, 'app/slides.html', {
+            'top_tracks': top_tracks,
+            'top_artists': top_artists,
+            'average_popularity': average,
+            'average_message': average_message,
+            'genres': genre,
+            'top_song': track,
+            'track_artist': track_artists[0],
+            'image_url': image_url
+
+
+        })
+    else:
+        return render(request, 'app/slides.html', {
+            'error': top_tracks_response.status_code,
+        })
 
 # Spotify Login
 def spotify_login(request):
@@ -180,8 +237,8 @@ def devs(request):
         },
         {
             'name': 'Paul Conner',
-            'email': 'gt email here',
-            'about' : 'Paul is _____'
+            'email': 'pconner6@gatech.edu',
+            'about' : 'Paul is a second year Computer Science major at Georgia Tech with interests in devices and intelligence'
         },
         {
             'name': 'Faris Fakhouri',

@@ -35,12 +35,14 @@ STATICFILES_DIRS = [
     BASE_DIR / "app/static",
 ]
 
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 CSRF_TRUSTED_ORIGINS = [
     "https://faris-school-work.tail63ecc.ts.net",
     "http://127.0.0.1",
 ]
+
 
 # Application definition
 
