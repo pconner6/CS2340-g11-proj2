@@ -157,3 +157,23 @@ body {
 .scroll-indicator:hover {
     opacity: 1;
 }
+
+.wrapped-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+.like-button {
+    font-size: 1.5rem;
+    color: #f48585;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+.like-button.liked {
+    color: #ff3434;
+}
+
+.sub-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
