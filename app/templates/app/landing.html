@@ -28,8 +28,7 @@
             font-size: 3rem;
             font-weight: bold;
             text-align: center;
-            margin-top: 100px;
-            margin-bottom: 40px;
+            margin-top: 30px;
             animation: fadeIn 2s ease-in-out forwards;
             opacity: 0;
         }
@@ -58,26 +57,6 @@
             background-image: radial-gradient(25% 25% at 10% 10%, #ffffff 0%, #ffffff 40%, #1a1a1a 100%);
         }
 
-        .christmas-mode-background {
-            position: fixed;
-            inset: 0;
-            z-index: -10;
-            width: 100vw;
-            height: 100vh;
-            background: url('/static/app/images/christmas.png') no-repeat center center fixed;
-        }
-
-        /* Halloween Mode Background */
-        .halloween-mode-background {
-            position: fixed;
-            inset: 0;
-            z-index: -10;
-            width: 100vw;
-            height: 100vh;
-            background-color: #FCC981;
-        }
-
-
         /* Header styling */
         .header {
             position: fixed;
@@ -90,11 +69,6 @@
             background-color: rgba(255, 255, 255, 0.9);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             z-index: 100;
-        }
-
-         .header-left {
-            display: flex;
-            align-items: center;
         }
 
         .header a,
@@ -128,6 +102,7 @@
             border-radius: 30px;
             font-weight: bold;
             transition: transform 0.3s ease;
+            margin: 10px;
         }
 
         .spotify-login:hover {
@@ -176,37 +151,55 @@
 <body>
     <!-- Background Divs -->
     <div class="light-mode-background"></div>
-    <div class="dark-mode-background invisible"></div>
-    <div class="christmas-mode-background invisible"></div>
-    <div class="halloween-mode-background invisible"></div>
+    <div class="dark-mode-background"></div>
 
-
-    <!-- Header with Contact Us and Personalization dropdown menu -->
+    <!-- Header -->
     <header class="header">
-    <a href="{% url 'devs' %}" class="contact-us">Contact Us</a>
-    <div class="dropdown">
-        <button>Personalization</button>
-        <div class="dropdown-content">
-            <a href="#" id="dark-mode-toggle">Dark Mode</a>
-            <a href="#" id="halloween-mode-toggle">Halloween Mode</a>
-            <a href="#" id="christmasToggle" class="festive-btn">Christmas Mode</a>
-            <a href="#" id="light-mode-toggle">Light Mode</a>
+        <a href="{% url 'devs' %}" class="contact-us">Contact Us</a>
+        <div class="dropdown">
+            <button>Personalization</button>
+            <div class="dropdown-content">
+                <a href="#" id="mode-toggle" class="dark-mode-toggle">Dark Mode</a>
+            </div>
         </div>
-    </div>
-</header>
+    </header>
 
-
-
-    <!-- Animated Title -->
+    <!-- Title -->
     <h1 class="title">Welcome to Your Spotify Wrapped</h1>
 
-    <!-- Spotify Login Button -->
-    <a href="{% url 'spotify_login' %}" class="spotify-login">Login with Spotify</a>
+    <!-- Buttons (Conditional on User Authentication) -->
+    <div class="button-container">
+        {% if user.is_authenticated %}
+            <!-- Links for Logged-In Users -->
+            <a href="{% url 'home' %}" class="spotify-login">Go to Home</a>
+            <a href="{% url 'view_wrapped' %}" class="spotify-login">View Past Spotify Wrapped</a>
+            <a href="{% url 'logout' %}" class="spotify-login">Logout</a>
+        {% else %}
+            <!-- Links for Non-Logged-In Users -->
+            <a href="{% url 'register' %}" class="spotify-login">Register</a>
+            <a href="{% url 'user_login' %}" class="spotify-login">Login</a>
+            <a href="{% url 'spotify_login' %}" class="spotify-login">Login with Spotify</a>
+        {% endif %}
+    </div>
 
+    <!-- Carousel -->
+    <div class="carousel-wrapper">
+        <div class="carousel">
+            <img src="{% static 'app/images/img1.jpeg' %}" alt="Image 1">
+            <img src="{% static 'app/images/image2.png' %}" alt="Image 2">
+            <img src="{% static 'app/images/image3.png' %}" alt="Image 3">
+            <img src="{% static 'app/images/image4.png' %}" alt="Image 4">
+            <img src="{% static 'app/images/img1.jpeg' %}" alt="Image 1">
+            <img src="{% static 'app/images/image2.png' %}" alt="Image 2">
+            <img src="{% static 'app/images/image3.png' %}" alt="Image 3">
+            <img src="{% static 'app/images/image4.png' %}" alt="Image 4">
+        </div>
+    </div>
+
+    <!-- Dark Mode Script -->
     <script>
         const toggleButton = document.getElementById('mode-toggle');
 
-        // Apply or remove dark mode on hover
         toggleButton.addEventListener('mouseenter', () => {
             document.body.classList.add('dark-mode');
         });
@@ -218,7 +211,6 @@
             }
         });
 
-        // Toggle dark mode permanently on click
         toggleButton.addEventListener('click', (e) => {
             e.preventDefault();
             document.body.classList.toggle('dark-mode');
@@ -227,127 +219,11 @@
             localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
         });
 
-        // Apply stored theme preference on load
         const storedTheme = localStorage.getItem('theme');
         if (storedTheme === 'dark') {
             document.body.classList.add('dark-mode');
             toggleButton.textContent = 'Light Mode';
         }
     </script>
-
-    <!-- Infinite Autoplay Carousel at the bottom of the page -->
-    <div class="carousel-wrapper">
-        <div class="carousel">
-            <!-- Duplicate images for seamless looping -->
-            <img src="{% static 'app/images/img1.jpeg' %}" alt="Image 1">
-            <img src="{% static 'app/images/image2.png' %}" alt="Image 2">
-            <img src="{% static 'app/images/image3.png' %}" alt="Image 3">
-            <img src="{% static 'app/images/image4.png' %}" alt="Image 4">
-            <!-- Duplicate the images -->
-            <img src="{% static 'app/images/img1.jpeg' %}" alt="Image 1">
-            <img src="{% static 'app/images/image2.png' %}" alt="Image 2">
-            <img src="{% static 'app/images/image3.png' %}" alt="Image 3">
-            <img src="{% static 'app/images/image4.png' %}" alt="Image 4">
-        </div>
-    </div>
-    <script src="{% static 'app/js/theme.js' %}"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const buttons = {
-            dark: document.getElementById('dark-mode-toggle'),
-            halloween: document.getElementById('halloween-mode-toggle'),
-            christmas: document.getElementById('christmasToggle'),
-            light: document.getElementById('light-mode-toggle'),
-        };
-
-        const applyTheme = (theme) => {
-            const themes = ['light-mode', 'dark-mode', 'halloween-mode', 'christmas-mode'];
-            document.body.classList.remove(...themes);
-            document.body.classList.add(`${theme}-mode`);
-            localStorage.setItem('theme', theme);
-        };
-
-        const removeTemporaryTheme = () => {
-            const themes = ['light-mode', 'dark-mode', 'halloween-mode', 'christmas-mode'];
-            document.body.classList.remove(...themes);
-            const storedTheme = localStorage.getItem('theme') || 'light';
-            document.body.classList.add(`${storedTheme}-mode`);
-        };
-
-        // Apply stored theme on load
-        const storedTheme = localStorage.getItem('theme') || 'light';
-        applyTheme(storedTheme);
-
-        // Add event listeners for hover and click
-        Object.entries(buttons).forEach(([theme, button]) => {
-            if (button) {
-                // Apply the theme on hover
-                button.addEventListener('mouseenter', () => {
-                    document.body.classList.add(`${theme}-mode`);
-                });
-
-                // Revert to stored theme on hover end
-                button.addEventListener('mouseleave', removeTemporaryTheme);
-
-                // Apply the theme permanently on click
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    applyTheme(theme);
-                });
-            }
-        });
-    });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const buttons = {
-                dark: document.getElementById('dark-mode-toggle'),
-                halloween: document.getElementById('halloween-mode-toggle'),
-                christmas: document.getElementById('christmasToggle'),
-                light: document.getElementById('light-mode-toggle'),
-            };
-
-            // Function to apply a theme
-            const applyTheme = (theme) => {
-                const themes = ['light-mode', 'dark-mode', 'halloween-mode', 'christmas-mode'];
-                document.body.classList.remove(...themes);
-                document.body.classList.add(`${theme}-mode`);
-                localStorage.setItem('theme', theme); // Save theme to localStorage
-            };
-
-            // Function to remove temporary themes on hover end
-            const removeTemporaryTheme = () => {
-                const themes = ['light-mode', 'dark-mode', 'halloween-mode', 'christmas-mode'];
-                document.body.classList.remove(...themes);
-                const storedTheme = localStorage.getItem('theme') || 'light';
-                document.body.classList.add(`${storedTheme}-mode`);
-            };
-
-            // Apply the stored theme on page load
-            const storedTheme = localStorage.getItem('theme') || 'light';
-            applyTheme(storedTheme);
-
-            // Add event listeners for hover and click
-            Object.entries(buttons).forEach(([theme, button]) => {
-                if (button) {
-                    // Apply the theme on hover
-                    button.addEventListener('mouseenter', () => {
-                        document.body.classList.add(`${theme}-mode`);
-                    });
-
-                    // Revert to the stored theme on hover end
-                    button.addEventListener('mouseleave', removeTemporaryTheme);
-
-                    // Apply the theme permanently on click
-                    button.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        applyTheme(theme);
-                    });
-                }
-            });
-        });
-    </script>
-
 </body>
 </html>
-

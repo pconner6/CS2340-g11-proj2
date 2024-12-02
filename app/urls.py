@@ -11,4 +11,9 @@ urlpatterns = [
     path('logout/', auth_views.logout_view, name='logout'),
     path('devs/', auth_views.devs, name='devs'),
     path('holiday-wrapped/', auth_views.holiday_wrapped, name='holiday_wrapped'),
+    path('slides/', auth_views.slides, name='slides'),
+    path('register/', auth_views.register_view, name='register'),
+    path('user-login/', auth_views.login_view, name='user_login'),
+    path('manage_wrapped/', auth_views.manage_wrapped, name='manage_wrapped'),
+    path('delete_account/', auth_views.delete_account, name='delete_account'),
 ]

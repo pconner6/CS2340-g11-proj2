@@ -1,0 +1,516 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Tuin Slideshow</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    <link rel="stylesheet" href="{% static 'app/slides.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Baloo+Bhai">
+  </head>
+  <body>
+    <section id="slider" class="section">
+      <div class="slider">
+        <div class="slider__container">
+          <div class="slider__item slide-intro">
+            <div class="slider__content grid">
+              <div class="column">
+                <h1 class="title">Cant wait?</h1>
+                <h1 class="title">Checkout Wrapped</h1>
+                <h1 class="title">NOW!</h1>
+              </div>
+              <div class="column"><img src="https://media.giphy.com/media/xUA7aW7KWW289LvRdK/giphy.gif" class="image eyes"></div>
+            </div>
+          </div>
+          <div class="slider__item slide-artists">
+            <div class="slider__content grid">
+              <div class="column">
+                <h1 class="title">Your Top</h1>
+                <h1 class="title">Artists</h1>
+              </div>
+              <div class="column">
+                {% for artist in top_artists %}
+                <h1 class="data"> {{forloop.counter}}: {{ artist.name }}</h1>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <div class="slider__item slide-genres">
+            <div class="slider__content grid">
+              <div class="column">
+                <h1 class="title">What's the</h1>
+                <h1 class="title">Vibe?</h1>
+              </div>
+              <div class="column">
+                <h1 class="data">Your top genre was:</h1>
+                <h1 class="data">{{ genre }}</h1>
+              </div>
+            </div>
+            
+          </div>
+          <div class="slider__item slide-popularity">
+            <div class="slider__content grid">
+              <div class="column">
+                <h1 class="title">Who else</h1>
+                <h1 class="title">is listening?</h1>
+              </div>
+              <div class="column">
+                <h1 class="title">{{ average_popularity }}%</h1>
+                <h1 class="data">  {{ average_message }}</h1>
+              </div>
+            </div>
+          </div>
+          <div class="slider__item slide-tracks">
+            <div class="slider__content grid">
+              <div class="column">
+                <h1 class="title">Some of your</h1>
+                <h1 class="title">favorites</h1>
+              </div>
+              <div class="column">
+                {% for track in top_tracks %}
+                <h1 class="data">  {{ track.name }}</h1>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <div class="slider__item slide-transition">
+            <div class="slider__content grid">
+              <div class="column">
+                <h1 class="title">The one song</h1>
+                <h2 class="title">You couldn't get enough of</h2>
+                <h1 class="title">. . .</h1>
+              </div>
+              <div class="column"></div>
+            </div>
+            
+          </div>
+          <div class="slider__item slide-top-track">
+            <div class="slider__content grid">
+              <div class="column">
+                <h1 class="title">The MVP</h1>
+                <h2 class="data">{{ top_song.name }} - {{ track_artist.name }}</h2>
+              </div>
+              <div class="column"><img src="{{image_url}}" class="image song"></div>
+            </div>
+          </div>
+          <div class="slider__item slide-closer">
+            <div class="slider__content grid">
+              <div class="column">
+                <h1 class="title">Thats a Wrap!</h1>
+                <h1 class="title">Thanks for stopping by :)</h1>
+              </div>
+              <div class="column"></div>
+            </div>
+          </div>
+      </div>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+    <script>
+        !function() {
+    "use strict";
+    function t(t, e, s) {
+        var i;
+        return function() {
+            var n = this
+              , o = arguments
+              , a = function() {
+                i = null,
+                s || t.apply(n, o)
+            }
+              , r = s && !i;
+            clearTimeout(i),
+            i = setTimeout(a, e),
+            r && t.apply(n, o)
+        }
+    }
+    function e(t, e) {
+        var i = {
+            selector: ".slider",
+            ease: "SlowMo",
+            easeType: "easeOut",
+            duration: 1,
+            nextHtml: "",
+            prevHtml: "",
+            arrows: !0,
+            keyboard: !0,
+            pagination: !0,
+            onLeave: null,
+            afterLoad: null
+        };
+        return this.el = document.querySelector(t),
+        this.settings = s.extend(i, e),
+        this.body = document.querySelector("body"),
+        this.container = this.el.querySelector(this.settings.selector + "__container"),
+        this.items = this.el.querySelectorAll(this.settings.selector + "__item"),
+        this.init(),
+        this
+    }
+    var s = {
+        extend: function(t, e) {
+            "object" != typeof e && (e = {});
+            for (var s in e)
+                t.hasOwnProperty(s) && (t[s] = e[s]);
+            return t
+        },
+        setStyle: function(t, e, s) {
+            t.style[e.charAt(0).toLowerCase() + e.slice(1)] = s
+        },
+        setVendor: function(t, e, s) {
+            t.style[e.charAt(0).toLowerCase() + e.slice(1)] = s,
+            t.style["webkit" + e] = s,
+            t.style["moz" + e] = s,
+            t.style["ms" + e] = s,
+            t.style["o" + e] = s
+        },
+        hasClass: function(t, e) {
+            return t.classList ? t.classList.contains(e) : !!t.className.match(new RegExp("(\\s|^)" + e + "(\\s|$)"))
+        },
+        addClass: function(t, e) {
+            t.classList ? t.classList.add(e) : s.hasClass(t, e) || (t.className += " " + e)
+        },
+        removeClass: function(t, e) {
+            if (t.classList)
+                t.classList.remove(e);
+            else if (s.hasClass(t, e)) {
+                var i = new RegExp("(\\s|^)" + e + "(\\s|$)");
+                t.className = t.className.replace(i, " ")
+            }
+        }
+    };
+    e.prototype.init = function() {
+        this.index = 0,
+        this.slideWidth = parseInt(getComputedStyle(this.container).width),
+        this.build(),
+        this.bindEvents(),
+        this.makeActive(this.index),
+        "function" == typeof this.settings.afterLoad && this.settings.afterLoad(this.index)
+    }
+    ,
+    e.prototype.build = function() {
+        this.settings.arrows && this.appendArrows(),
+        this.settings.pagination && this.appendPagination()
+    }
+    ,
+    e.prototype.bindEvents = function() {
+        var t = this;
+        if (this.settings.keyboard && document.addEventListener("keydown", this.keyboard.bind(this)),
+        this.settings.arrows && (this.settings.nextHtml.addEventListener("click", this.moveToNext.bind(this)),
+        this.settings.prevHtml.addEventListener("click", this.moveToPrev.bind(this))),
+        this.settings.pagination)
+            for (var e = document.querySelectorAll(".slider-navigation li a"), s = 0; s < e.length; s++)
+                !function(i) {
+                    e[s].addEventListener("click", function(e) {
+                        t.move(i),
+                        e.preventDefault()
+                    })
+                }(s);
+        window.addEventListener("resize", this.resize.bind(this), !1)
+    }
+    ,
+    e.prototype.makeActive = function(t) {
+        for (var e = document.querySelectorAll(".slider-navigation li a"), i = 0; i < this.items.length; i++)
+            s.removeClass(this.items[i], "is-active"),
+            s.removeClass(e[i], "is-active");
+        s.addClass(this.items[t], "is-active"),
+        s.addClass(e[t], "is-active")
+    }
+    ,
+    e.prototype.move = function(t) {
+        var e = new TimelineLite
+          , i = this
+          , n = document.querySelector(".slider-navigation");
+        return s.hasClass(this.items[t], "is-active") || (e.eventCallback("onStart", function() {
+            s.setStyle(i.settings.prevHtml, "pointerEvents", "none"),
+            s.setStyle(i.settings.nextHtml, "pointerEvents", "none"),
+            s.setStyle(n, "pointerEvents", "none")
+        }),
+        "function" == typeof i.settings.onLeave && e.add(i.settings.onLeave(i.index)),
+        e.to(this.container, this.settings.duration, {
+            x: -t * this.slideWidth,
+            ease: this.settings.ease + "." + this.settings.easeType
+        }, "-=0.5"),
+        "function" == typeof i.settings.afterLoad && e.add(i.settings.afterLoad(t)),
+        e.eventCallback("onComplete", function() {
+            s.setStyle(i.settings.prevHtml, "pointerEvents", "auto"),
+            s.setStyle(i.settings.nextHtml, "pointerEvents", "auto"),
+            s.setStyle(n, "pointerEvents", "auto"),
+            console.log(n)
+        })),
+        this.index = t,
+        this.makeActive(this.index),
+        e
+    }
+    ,
+    e.prototype.moveToNext = function(t) {
+        this.index + 1 < this.items.length && this.move(this.index + 1)
+    }
+    ,
+    e.prototype.moveToPrev = function() {
+        this.index > 0 && this.move(this.index - 1)
+    }
+    ,
+    e.prototype.keyboard = function(t) {
+        37 === t.keyCode && this.moveToPrev(),
+        39 === t.keyCode && this.moveToNext()
+    }
+    ,
+    e.prototype.appendArrows = function() {
+        var t = document.createElement("div");
+        t.setAttribute("class", "slider-controls");
+        var e = document.createElement("button");
+        e.setAttribute("type", "button"),
+        e.setAttribute("class", "next");
+        var s = document.createElement("button");
+        s.setAttribute("type", "button"),
+        s.setAttribute("class", "previous"),
+        this.el.appendChild(t);
+        var i = this.el.querySelector(".slider-controls");
+        i.appendChild(e),
+        i.appendChild(s),
+        this.settings.nextHtml = e,
+        this.settings.prevHtml = s
+    }
+    ,
+    e.prototype.appendPagination = function() {
+        for (var t = "", e = 0; e < this.items.length; e++)
+            t += '<li><a data-index="' + e + '" href="#' + e + '"></a></li>';
+        var s = document.createElement("ul");
+        s.setAttribute("class", "slider-navigation"),
+        s.innerHTML = t,
+        this.body.appendChild(s)
+    }
+    ,
+    e.prototype.resize = t(function() {
+        var t = this;
+        t.slideWidth = parseInt(getComputedStyle(this.container).width);
+        var e = t.slideWidth * t.index + 1;
+        s.setVendor(t.container, "Transform", "matrix(1, 0, 0, 1, -" + e + ", 0)")
+    }, 10),
+    window.TuinSlider = e
+}(window);
+var slider = new TuinSlider("#slider",{
+    onLeave: function(e) {
+        var t = new TimelineLite
+          , o = document.querySelectorAll(".slider__item")
+          , r = o[e]
+          , a = r.querySelectorAll(".title")
+          , i1 = r.querySelector(".eyes")
+          , y1 = r.querySelector(".data")
+          , c1 = r.querySelectorAll(".data")
+          , i2 = r.querySelector(".title")
+          , y2 = r.querySelector(".data")
+          , c2 = r.querySelectorAll(".data")
+          , i3 = r.querySelector(".song")
+          , y3 = r.querySelector(".data");
+        return 0 === e && t.staggerTo(a, .8, {
+            y: -100,
+            opacity: 0,
+            ease: Power3.easeOut
+        }, .5).to(i1, .6, {
+            x: 200,
+            opacity: 0,
+            ease: Power3.easeOut
+        }),
+        1 === e && t.staggerTo(a, .8, {
+            y: 100,
+            opacity: 0,
+            ease: Power3.easeOut
+        }, .5).to(y1, .5, {
+            y: -100,
+            opacity: 0
+        }, "=-1"),
+        2 === e && t.staggerTo(a, .8, {
+            y: -100,
+            opacity: 0,
+            ease: Power3.easeOut
+        }, .5).to(c1, .5, {
+            x: 100,
+            opacity: 0
+        }),
+        3 === e && t.staggerTo(a, .8, {
+            y: -100,
+            opacity: 0,
+            ease: Power3.easeOut
+        }, .5).to(i2, .6, {
+            x: 200,
+            opacity: 0,
+            ease: Power3.easeOut
+        }),
+        4 === e && t.staggerTo(a, .8, {
+            y: 100,
+            opacity: 0,
+            ease: Power3.easeOut
+        }, .5).to(y2, .5, {
+            y: -100,
+            opacity: 0
+        }, "=-1"),
+        5 === e && t.staggerTo(a, .8, {
+            y: -100,
+            opacity: 0,
+            ease: Power3.easeOut
+        }, .5).to(c2, .5, {
+            x: 100,
+            opacity: 0
+        }),
+        6 === e && t.staggerTo(a, .8, {
+            y: -100,
+            opacity: 0,
+            ease: Power3.easeOut
+        }, .5).to(i3, .6, {
+            x: 200,
+            opacity: 0,
+            ease: Power3.easeOut
+        }),
+        7 === e && t.staggerTo(a, .8, {
+            y: 100,
+            opacity: 0,
+            ease: Power3.easeOut
+        }, .5).to(y3, .5, {
+            y: -100,
+            opacity: 0
+        }, "=-1"),
+        t
+    },
+    afterLoad: function(e) {
+        var t = new TimelineLite
+          , o = document.querySelectorAll(".slider__item")
+          , r = o[e]
+          , a = r.querySelectorAll(".title")
+          , i = r.querySelector(".slider__content");
+        TweenLite.set(i, {
+            visibility: "visible"
+        });
+        var y1 = r.querySelector(".eyes")
+          , c1 = r.querySelector(".data")
+          , l1 = r.querySelectorAll(".data")
+          , y2 = r.querySelector(".title")
+          , c2 = r.querySelector(".data")
+          , l2 = r.querySelectorAll(".data")
+          , y3 = r.querySelector(".song")
+          , c3 = r.querySelector(".data");
+        return 0 === e && t.staggerFromTo(a, 1, {
+            y: 100,
+            opacity: 0
+        }, {
+            y: 0,
+            opacity: 1,
+            ease: Power3.easeOut
+        }, .5).fromTo(y1, 1.5, {
+            x: 100,
+            opacity: 0
+        }, {
+            x: 0,
+            opacity: 1,
+            ease: Power3.easeOut
+        }, "-=0.6"),
+        1 === e && t.staggerFromTo(a, .8, {
+            y: -100,
+            opacity: 0
+        }, {
+            y: 0,
+            opacity: 1,
+            ease: Power3.easeOut
+        }, .5).fromTo(c1, .5, {
+            y: 100,
+            opacity: 0
+        }, {
+            y: 0,
+            opacity: 1
+        }, "=-1"),
+        2 === e && t.staggerFromTo(a, .8, {
+            y: 100,
+            opacity: 0
+        }, {
+            y: 0,
+            opacity: 1,
+            ease: Power3.easeOut
+        }, .5).staggerFromTo(l1, 1.5, {
+            x: 100,
+            opacity: 0
+        }, {
+            x: 0,
+            opacity: 1,
+            ease: Power3.easeOut
+        }, .5),
+        3 === e && t.staggerFromTo(a, 1, {
+            y: 100,
+            opacity: 0
+        }, {
+            y: 0,
+            opacity: 1,
+            ease: Power3.easeOut
+        }, .5).fromTo(y2, 1.5, {
+            x: 100,
+            opacity: 0
+        }, {
+            x: 0,
+            opacity: 1,
+            ease: Power3.easeOut
+        }, "-=0.6"),
+        4 === e && t.staggerFromTo(a, .8, {
+            y: -100,
+            opacity: 0
+        }, {
+            y: 0,
+            opacity: 1,
+            ease: Power3.easeOut
+        }, .5).fromTo(c2, .5, {
+            y: 100,
+            opacity: 0
+        }, {
+            y: 0,
+            opacity: 1
+        }, "=-1"),
+        5 === e && t.staggerFromTo(a, .8, {
+            y: 100,
+            opacity: 0
+        }, {
+            y: 0,
+            opacity: 1,
+            ease: Power3.easeOut
+        }, .5).staggerFromTo(l2, 1.5, {
+            x: 100,
+            opacity: 0
+        }, {
+            x: 0,
+            opacity: 1,
+            ease: Power3.easeOut
+        }, .5),
+        6 === e && t.staggerFromTo(a, 1, {
+            y: 100,
+            opacity: 0
+        }, {
+            y: 0,
+            opacity: 1,
+            ease: Power3.easeOut
+        }, .5).fromTo(y3, 1.5, {
+            x: 100,
+            opacity: 0
+        }, {
+            x: 0,
+            opacity: 1,
+            ease: Power3.easeOut
+        }, "-=0.6"),
+        7 === e && t.staggerFromTo(a, .8, {
+            y: -100,
+            opacity: 0
+        }, {
+            y: 0,
+            opacity: 1,
+            ease: Power3.easeOut
+        }, .5).fromTo(c3, .5, {
+            y: 100,
+            opacity: 0
+        }, {
+            y: 0,
+            opacity: 1
+        }, "=-1"),
+        t
+    }
+});
+
+    </script>
+  </body>
+</html>

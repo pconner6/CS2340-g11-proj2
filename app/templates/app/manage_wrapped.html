@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Wrapped</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(to bottom, #f0f0f0, #c9ebff);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .wrapped-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .wrapped-item {
+            background: #fff;
+            margin: 10px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+
+        .wrapped-item p {
+            margin: 0;
+        }
+
+        .wrapped-item button {
+            background-color: #FF4D4D;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .wrapped-item button:hover {
+            background-color: #E03B3B;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manage Your Spotify Wrapped Data</h1>
+    {% if wrapped_items %}
+        <ul class="wrapped-list">
+            {% for wrapped in wrapped_items %}
+            <li class="wrapped-item">
+                <p><strong>Date:</strong> {{ wrapped.created_at }}</p>
+                <p><strong>Data:</strong> {{ wrapped.data }}</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="delete_id" value="{{ wrapped.id }}">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-center">No Wrapped data available.</p>
+    {% endif %}
+    <div class="text-center">
+        <a href="{% url 'home' %}" class="text-blue-500 hover:text-blue-700">Back to Home</a>
+    </div>
+</body>
+</html>

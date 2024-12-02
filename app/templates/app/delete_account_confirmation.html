@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: radial-gradient(circle, #FFE0E0, #FFC0C0);
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        button {
+            background-color: #FF4D4D;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #E03B3B;
+        }
+
+        a {
+            display: block;
+            margin-top: 10px;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Are you sure you want to delete your account?</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit">Yes, Delete My Account</button>
+        </form>
+        <a href="{% url 'home' %}">Cancel</a>
+    </div>
+</body>
+</html>
