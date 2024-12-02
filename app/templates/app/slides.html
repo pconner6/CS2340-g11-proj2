@@ -45,7 +45,7 @@
               </div>
               <div class="column">
                 <h1 class="data">Your top genre was:</h1>
-                <h1 class="data">{{ genre }}</h1>
+                <h1 class="title">{{ genre }}</h1>
               </div>
             </div>
             
@@ -55,9 +55,10 @@
               <div class="column">
                 <h1 class="title">Who else</h1>
                 <h1 class="title">is listening?</h1>
+                <h1 class="data">Popularity rating of your music: </h1>
               </div>
               <div class="column">
-                <h1 class="title">{{ average_popularity }}%</h1>
+                <h1 class="title"> {{ average_popularity }}%</h1>
                 <h1 class="data">  {{ average_message }}</h1>
               </div>
             </div>
@@ -79,10 +80,11 @@
             <div class="slider__content grid">
               <div class="column">
                 <h1 class="title">The one song</h1>
-                <h2 class="title">You couldn't get enough of</h2>
+                <h2 class="title">You couldn't</h2>
+                <h2 class="title">get enough of</h2>
                 <h1 class="title">. . .</h1>
               </div>
-              <div class="column"></div>
+              <div class="column"><img src="https://cdn.pixabay.com/photo/2021/11/01/22/16/hand-6761912_960_720.png" class="image hand"></div>
             </div>
             
           </div>
@@ -99,9 +101,12 @@
             <div class="slider__content grid">
               <div class="column">
                 <h1 class="title">Thats a Wrap!</h1>
-                <h1 class="title">Thanks for stopping by :)</h1>
+                <h1 class="title">Wrap! :)</h1>
               </div>
-              <div class="column"></div>
+              <div class="column">
+                <a href="{% url 'view_wrapped' %}" class="button">View Past Spotify Wrapped</a>
+                <a href="{% url 'home' %}" class="button">Back to Home</a>
+              </div>
             </div>
           </div>
       </div>
@@ -301,9 +306,9 @@ var slider = new TuinSlider("#slider",{
           , c1 = r.querySelectorAll(".data")
           , i2 = r.querySelector(".title")
           , y2 = r.querySelector(".data")
-          , c2 = r.querySelectorAll(".data")
+          , c2 = r.querySelectorAll(".hand")
           , i3 = r.querySelector(".song")
-          , y3 = r.querySelector(".data");
+          , y3 = r.querySelector(".button");
         return 0 === e && t.staggerTo(a, .8, {
             y: -100,
             opacity: 0,
@@ -387,9 +392,9 @@ var slider = new TuinSlider("#slider",{
           , l1 = r.querySelectorAll(".data")
           , y2 = r.querySelector(".title")
           , c2 = r.querySelector(".data")
-          , l2 = r.querySelectorAll(".data")
+          , l2 = r.querySelectorAll(".hand")
           , y3 = r.querySelector(".song")
-          , c3 = r.querySelector(".data");
+          , c3 = r.querySelector(".button");
         return 0 === e && t.staggerFromTo(a, 1, {
             y: 100,
             opacity: 0

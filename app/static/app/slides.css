@@ -19,7 +19,7 @@ body {
   font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   text-size-adjust: none; }
-
+a,
 h1,
 h2,
 h3,
@@ -138,7 +138,7 @@ img {
   background: #22231D; }
 
 .slide-genres {
-  background: #836C54; }
+  background: #cb7213; }
 
 .slide-popularity {
   background: #CF624A; }
@@ -147,7 +147,7 @@ img {
   background: #22231D; }
   
 .slide-transition {
-  background: #836C54; }
+  background: #dc3ab6; }
 
 .slide-top-track {
   background: #CF624A; }
@@ -170,3 +170,22 @@ img {
   .title {
     font-size: 7em; } 
 }
+
+/* Green button styling */
+.button {
+  display: inline-block;
+  padding: 24px 48px;
+  background-color: #1DB954;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 60px;
+  font-weight: bold;
+  text-align: center;
+  transition: transform 0.3s ease;
+  margin: 20px;
+}
+
+.button:hover {
+  transform: scale(1.05);
+}
+

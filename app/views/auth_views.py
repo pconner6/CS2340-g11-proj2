@@ -44,11 +44,14 @@ def slides(request):
             average_message = "Perfectly balanced, as all things should be."
         else:
             average_message = "Secret trendsetter?"
-        # Genres (based on artist)
-        genre = top_artists[0].get('genres', [])
         
         track = top_tracks[0]
         track_artists = track.get('artists', [])
+        genres = track_artists[0].get('genres', [])
+        genre = "Unknown"
+        if len(genres) > 0:
+            genre = genres[0]
+        
         images = track.get("album", {}).get("images", [])
         if images:
             image_url = images[0]["url"]  # Return the largest image
@@ -60,7 +63,7 @@ def slides(request):
             'top_artists': top_artists,
             'average_popularity': average,
             'average_message': average_message,
-            'genres': genre,
+            'genre': genre,
             'top_song': track,
             'track_artist': track_artists[0],
             'image_url': image_url
