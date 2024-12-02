@@ -13,6 +13,7 @@ import os
 
 from pathlib import Path
 from . import credentials
+from . import utils
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -124,9 +125,9 @@ SPOTIFY_CLIENT_ID = credentials.SPOTIFY_CLIENT_ID
 SPOTIFY_CLIENT_SECRET = credentials.SPOTIFY_CLIENT_SECRET
 
 if os.getenv('PRODUCTION', 'false').lower() == 'true':
-    SPOTIFY_REDIRECT_URI = credentials.SPOTIFY_REDIRECT_URI_PROD
+    SPOTIFY_REDIRECT_URI = utils.SPOTIFY_REDIRECT_URI_PROD
 else:
-    SPOTIFY_REDIRECT_URI = credentials.SPOTIFY_REDIRECT_URI_DEV
+    SPOTIFY_REDIRECT_URI = utils.SPOTIFY_REDIRECT_URI_DEV
 
 LANGUAGE_CODE = 'en-us'
 
