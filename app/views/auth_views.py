@@ -245,8 +245,8 @@ def devs(request):
         },
         {
             'name': 'Faris Fakhouri',
-            'email': 'gt email here',
-            'about' : 'Faris is _____'
+            'email': 'ffakhouri3@gatech.edu',
+            'about' : 'Faris is a 3rd year Computer Engineering Major at GT with a focus on distributed system design and information internetworks'
         }
     ]
 
